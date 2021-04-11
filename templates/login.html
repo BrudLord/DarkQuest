@@ -10,7 +10,6 @@
     <p>
         {{ form.name.label }}<br>
         {{ form.name(class="form-control") }}<br>
-        {{ form.image }}
         {% for error in form.name.errors %}
             <p class="alert alert-danger" role="alert">
                 {{ error }}
@@ -26,8 +25,8 @@
             </p>
         {% endfor %}
     </p>
-    <p>{{ form.log(type="submit", class="btn btn-primary") }}</p>
-    <p>{{ form.reg(type="submit", class="btn btn-primary") }}</p>
+    <p>{{ form.log(type="submit", class="btn btn-danger") }}</p>
+    <p>{{ form.reg(type="submit", class="btn btn-danger") }}</p>
     {{ message }}
 </form>
 {% endblock %}
