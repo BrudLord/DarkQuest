@@ -10,6 +10,7 @@
     <p>
         {{ form.name.label }}<br>
         {{ form.name(class="form-control") }}<br>
+        {{ form.image }}
         {% for error in form.name.errors %}
             <p class="alert alert-danger" role="alert">
                 {{ error }}
