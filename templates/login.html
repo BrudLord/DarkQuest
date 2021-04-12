@@ -1,7 +1,32 @@
-<html>
-   <head>
-   </head>
-   <body class="body">
-   <div> sfvikmer,l </div>
-   </body>
-</html>
+{% extends "base.html" %}
+
+{% block content %}
+<center>
+    <h1> Добро пожаловать... </h1>
+    <h2> Пожалуйста, пройдите регистрацию или авторизуйтесь. </h2>
+</center>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.name.label }}<br>
+        {{ form.name(class="form-control") }}<br>
+        {% for error in form.name.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.password.label }}<br>
+        {{ form.password(class="form-control", type="password") }}<br>
+        {% for error in form.password.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p>{{ form_log.log(type="submit", class="btn btn-lg btn-danger") }}</p>
+    <p>{{ form.reg(type="submit", class="btn btn-lg btn-danger") }}</p>
+    {{ message }}
+</form>
+{% endblock %}
