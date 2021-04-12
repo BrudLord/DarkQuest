@@ -11,6 +11,8 @@ def main_window():
 @app.route('/help')
 def help():
     return render_template('help.html')
+def settings():
+    return render_template('Settings.html')
 
 
 
