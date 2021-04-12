@@ -7,5 +7,8 @@ from wtforms.validators import DataRequired
 class RegisterForm(FlaskForm):
     name = StringField('Имя пользователя', validators=[DataRequired()])
     password = PasswordField('Пароль', validators=[DataRequired()])
-    log = SubmitField('Войти')
     reg = SubmitField('Зарегестрироваться')
+
+
+class LoginForm(FlaskForm):
+    log = SubmitField('Войти')
