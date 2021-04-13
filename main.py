@@ -15,6 +15,11 @@ def login():
     return render_template('login.html', **params)
 
 
+@con.app.route('/map')
+def map():
+    return render_template('map.html')
+
+
 if __name__ == '__main__':
     db_session.global_init("db/base.sqlite")
     con.app.run()
