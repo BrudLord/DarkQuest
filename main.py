@@ -56,6 +56,7 @@ def registration():
         user.set_password(form.password.data)
         db_sess.add(user)
         db_sess.commit()
+        return redirect('/main_window')
     return render_template('registration.html', title='DarkQuest', form=form)
 
     
