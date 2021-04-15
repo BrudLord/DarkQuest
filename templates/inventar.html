@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+	.flex{ display: flex; }
+</style>
+<div class="flex">
+	<div class="item">1</div>
+	<div class="item">2</div>
+</div>
+<div id='app'>
+    <button v-on:click="promote(1)" class="btn btn-lg btn-danger">К регистрации</button>
+</div>
+<script src="https://unpkg.com/vue@next"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+
+const App = {
+    data() {
+        return {
+           test: {},
+        }
+    },
+    methods: {
+      promote(value) {
+        if (value == '1') {
+            history.pushState('', '', '/main_window');
+            window.location.reload();
+        }
+      },
+    }
+}
+
+Vue.createApp(App).mount('#app')
+</script>
+{% endblock %}

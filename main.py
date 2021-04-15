@@ -59,7 +59,12 @@ def registration():
         return redirect('/main_window')
     return render_template('registration.html', title='DarkQuest', form=form)
 
-    
+
+@con.app.route('/inventar', methods=['GET', 'POST'])
+def inventar():
+    return render_template('inventar.html', title='DarkQuest')
+
+
 if __name__ == '__main__':
     db_session.global_init("db/base.sqlite")
     con.app.run(port=8080, debug=True)
