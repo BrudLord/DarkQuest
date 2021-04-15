@@ -28,10 +28,12 @@ def tranzit(item):
     con.hero.data['invent'].append(item)
     co = sqlite3.connect('db/base')
     cur = co.cursor()
-    resulte = cur.execute('''UPDATE users
-    SET DATA = ? 
-    WHERE name = ?''', (str(con.hero.data), con.hero.name,))
-    co.commit()
+    if item == 'хилка' or item == 'манка':
+        con.hero.data['money'] -= 1
+        resulte = cur.execute('''UPDATE users
+        SET data = ? 
+        WHERE name = ?''', (str(con.hero.data), con.hero.name,))
+        co.commit()
     return redirect('/map')
 
 
