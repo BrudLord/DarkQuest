@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect
 import os
+import sqlite3
 import config as con
 from work_with_db import db_session
 from forms.user import RegisterForm, LoginForm
@@ -28,6 +29,7 @@ def login():
         user = db_sess.query(User).filter(User.name == form.name.data).first()
         if user and user.check_password(form.password.data):
             login_user(user)
+            init_hero(form.name.data)
             return redirect("/main_window")
         return render_template('login.html',
                                title='DarkQuest',
@@ -49,13 +51,28 @@ def registration():
             return render_template('registration.html', title='DarkQuest',
                                    form=form,
                                    message="Такой пользователь уже есть")
+        sl = {
+            'lvl': 1,
+            'money': 0,
+            'equip': [],
+            'invent': [],
+            'characteristics': {
+                'damage': 1,
+                'CritChance': 1,
+                'Armor': 1,
+                'HealPoints': 1,
+                'Agility': 1,
+                'Accurancy': 1,
+            }
+        }
         user = User(
             name=form.name.data,
-            data='[]'
+            data=str(sl)
         )
         user.set_password(form.password.data)
         db_sess.add(user)
         db_sess.commit()
+        init_hero(form.name.data)
         return redirect('/main_window')
     return render_template('registration.html', title='DarkQuest', form=form)
 
@@ -63,6 +80,15 @@ def registration():
 @con.app.route('/inventar', methods=['GET', 'POST'])
 def inventar():
     return render_template('inventar.html', title='DarkQuest')
+
+
+def init_hero(name):
+    co = sqlite3.connect('base.sqlite')
+    cur = co.cursor()
+    con.hero = name
+    con.hero.data = eval(cur.execute('''SELECT data FROM users
+    WHERE name = ?''', (name, )).fetchall())
+    co.close()
 
 
 if __name__ == '__main__':

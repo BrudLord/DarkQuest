@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
+<link rel="stylesheet"
+          type="text/css"
+          href="/static/css/inventar.css">
 <style>
 	.flex{ display: flex; }
 </style>
@@ -8,6 +11,10 @@
 	<div class="item">1</div>
 	<div class="item">2</div>
 </div>
+<table class="table_invent">
+	<tr><th>текст заголовка</th><th>текст заголовка</th></tr>
+	<tr><td>данные</td><td>данные</td></tr>
+</table>
 <div id='app'>
     <button v-on:click="promote(1)" class="btn btn-lg btn-danger">К регистрации</button>
 </div>
