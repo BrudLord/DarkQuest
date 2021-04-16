@@ -1,3 +1,3 @@
 class Hero:
     def __init__(self):
-        pass
+        self.in_battle = False

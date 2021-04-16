@@ -57,7 +57,7 @@ def registration():
             'equip': [],
             'invent': [],
             'characteristics': {
-                'damage': 1,
+                'Damage': 1,
                 'CritChance': 1,
                 'Armor': 1,
                 'HealPoints': 1,
@@ -79,15 +79,37 @@ def registration():
 
 @con.app.route('/inventar', methods=['GET', 'POST'])
 def inventar():
-    return render_template('inventar.html', title='DarkQuest')
+    sl = []
+    for i in con.hero.data['characteristics'].keys():
+        sl.append([i, con.hero.data['characteristics'][i]])
+    tables = {
+        'table_1': {
+            'header': ['Характеристика', 'Значение'],
+            'character': sl,
+        },
+        'table_2': {
+            'header': ['Название', 'Ранг', 'Бонус'],
+            'equip': con.hero.data['equip']
+        },
+        'table_3': {
+            'header': ['Название', 'Количество'],
+            'invent': con.hero.data['invent']
+        },
+    }
+    return render_template('inventar.html', title='DarkQuest', tables=tables)
+
+
+@con.app.route('/main_window', methods=['GET', 'POST'])
+def main_window():
+    return str(con.hero.data)
 
 
 def init_hero(name):
-    co = sqlite3.connect('base.sqlite')
+    co = sqlite3.connect('db/base.sqlite')
     cur = co.cursor()
-    con.hero = name
+    con.hero.name = name
     con.hero.data = eval(cur.execute('''SELECT data FROM users
-    WHERE name = ?''', (name, )).fetchall())
+    WHERE name = ?''', (name, )).fetchall()[0][0])
     co.close()
 
 

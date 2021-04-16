@@ -1,27 +1,63 @@
 {% extends "base.html" %}
 
 {% block content %}
+<link type="text/css"
+          rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+          crossorigin="anonymous">
 <link rel="stylesheet"
           type="text/css"
           href="/static/css/inventar.css">
-<style>
-	.flex{ display: flex; }
-</style>
-<div class="flex">
-	<div class="item">1</div>
-	<div class="item">2</div>
-</div>
-<table class="table_invent">
-	<tr><th>текст заголовка</th><th>текст заголовка</th></tr>
-	<tr><td>данные</td><td>данные</td></tr>
+<img src="static/img/hero.png" class="imag">
+<table class="table_blur table_3">
+  <tr>
+    {% for i in tables['table_3']['header'] %}
+      <th>{{ i }}</th>
+    {% endfor %}
+    </tr>
+  {% for i in tables['table_3']['character'] %}
+  <tr>
+    {% for j in i %}
+      <td>{{ j }}</td>
+    {% endfor %}
+  </tr>
+  {% endfor %}
+</table>
+<table class="table_blur table_2">
+  <tr>
+    {% for i in tables['table_2']['header'] %}
+      <th>{{ i }}</th>
+    {% endfor %}
+    </tr>
+  {% for i in tables['table_2']['character'] %}
+  <tr>
+    {% for j in i %}
+      <td>{{ j }}</td>
+    {% endfor %}
+  </tr>
+  {% endfor %}
+</table>
+<table class="table_blur table_1">
+  <tr>
+    {% for i in tables['table_1']['header'] %}
+      <th>{{ i }}</th>
+    {% endfor %}
+    </tr>
+  {% for i in tables['table_1']['character'] %}
+  <tr>
+    {% for j in i %}
+      <td>{{ j }}</td>
+    {% endfor %}
+  </tr>
+  {% endfor %}
 </table>
 <div id='app'>
-    <button v-on:click="promote(1)" class="btn btn-lg btn-danger">К регистрации</button>
+    <button v-on:click="promote(1)" class="btn btn-lg btn-danger btn">В главное меню</button>
 </div>
 <script src="https://unpkg.com/vue@next"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
-
 const App = {
     data() {
         return {
