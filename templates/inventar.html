@@ -10,13 +10,14 @@
           type="text/css"
           href="/static/css/inventar.css">
 <img src="static/img/hero.png" class="imag">
-<table class="table_blur table_3">
+<div class="lvl">Уровень: {{level}}</div>
+<table class="table_blur table_2 scrolling2">
   <tr>
-    {% for i in tables['table_3']['header'] %}
+    {% for i in tables['table_2']['header'] %}
       <th>{{ i }}</th>
     {% endfor %}
     </tr>
-  {% for i in tables['table_3']['character'] %}
+  {% for i in tables['table_2']['equip'] %}
   <tr>
     {% for j in i %}
       <td>{{ j }}</td>
@@ -24,13 +25,13 @@
   </tr>
   {% endfor %}
 </table>
-<table class="table_blur table_2">
+<table class="table_blur table_3">
   <tr>
-    {% for i in tables['table_2']['header'] %}
+    {% for i in tables['table_3']['header'] %}
       <th>{{ i }}</th>
     {% endfor %}
     </tr>
-  {% for i in tables['table_2']['character'] %}
+  {% for i in tables['table_3']['invent'] %}
   <tr>
     {% for j in i %}
       <td>{{ j }}</td>
@@ -73,7 +74,26 @@ const App = {
       },
     }
 }
-
 Vue.createApp(App).mount('#app')
+</script>
+<script>
+document.querySelector('table').onclick = (event) => {
+  let cell = event.target;
+  if (cell.tagName.toLowerCase() != 'td')
+    return;
+  let i = cell.parentNode.rowIndex;
+  let j = cell.cellIndex;
+  /*let table = document.querySelector('table');
+  for (var m = 0; m < table.rows.length; m++) {
+    for (var n = 0; n < table.rows[m].cells.length; n++) {
+      if (table.rows[m].cells[n] == cell) {
+        i = m;
+        j = n;
+      }
+    }
+  }*/
+  history.pushState('', '', '/inventar_tranzit/' + String(i));
+  window.location.reload();
+}
 </script>
 {% endblock %}

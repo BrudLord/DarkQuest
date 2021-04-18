@@ -54,7 +54,10 @@ def registration():
         sl = {
             'lvl': 1,
             'money': 0,
-            'equip': [],
+            'equip': [['1', '2', '3', '4 dm', 'Нет'],
+                      ['2', '3', '4', '5 dm', 'Нет'],
+                      ['1', '2', '3', '4 df', 'Нет'],
+                      ['2', '3', '4', '5 df', 'Нет']],
             'invent': [],
             'characteristics': {
                 'Damage': 1,
@@ -82,26 +85,50 @@ def inventar():
     sl = []
     for i in con.hero.data['characteristics'].keys():
         sl.append([i, con.hero.data['characteristics'][i]])
+    eq = con.hero.data['equip'][:]
+    eq.extend((5 - len(con.hero.data['equip'])) * [5 * [' ']])
     tables = {
         'table_1': {
             'header': ['Характеристика', 'Значение'],
             'character': sl,
         },
         'table_2': {
-            'header': ['Название', 'Ранг', 'Бонус'],
-            'equip': con.hero.data['equip']
+            'header': ['Название', 'Доступ', 'Цена', 'Урон/Защита', 'Надето'],
+            'equip': eq,
         },
         'table_3': {
             'header': ['Название', 'Количество'],
-            'invent': con.hero.data['invent']
+            'invent': [['Презренный металл', str(con.hero.data['money'])],
+                       ['Зелье здоровья', str(con.hero.data['invent'].count('хилка'))],
+                       ['Зелье маны', str(con.hero.data['invent'].count('манка'))]]
         },
     }
-    return render_template('inventar.html', title='DarkQuest', tables=tables)
+    return render_template('inventar.html', title='DarkQuest', tables=tables, level=con.hero.data['lvl'])
 
 
 @con.app.route('/main_window', methods=['GET', 'POST'])
 def main_window():
     return str(con.hero.data)
+
+
+@con.app.route('/inventar_tranzit/<a>', methods=['GET', 'POST'])
+def invent(a):
+    a = int(a)
+    if a != 0 and a <= len(con.hero.data['equip']):
+        if con.hero.data['equip'][a - 1][-1] == 'Да':
+            con.hero.data['equip'][a - 1][-1] = 'Нет'
+        else:
+            con.hero.data['equip'][a - 1][-1] = 'Да'
+            for i in range(len(con.hero.data['equip'])):
+                if a - 1 != i:
+                    if 'dm' in con.hero.data['equip'][a - 1][-2]:
+                        if 'dm' in con.hero.data['equip'][i][-2] and con.hero.data['equip'][i][-1] == 'Да':
+                            con.hero.data['equip'][i][-1] = 'Нет'
+                    else:
+                        if 'df' in con.hero.data['equip'][i][-2] and con.hero.data['equip'][i][-1] == 'Да':
+                            con.hero.data['equip'][i][-1] = 'Нет'
+    return redirect('/inventar')
+
 
 
 def init_hero(name):
