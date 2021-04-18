@@ -7,7 +7,6 @@ from forms.user import RegisterForm, LoginForm
 from work_with_db.Users import User
 from flask_login import LoginManager, login_user
 
-
 con.app = Flask(__name__)
 con.app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
@@ -54,18 +53,12 @@ def registration():
         sl = {
             'lvl': 1,
             'money': 0,
-            'equip': [['1', '2', '3', '4 dm', 'Нет'],
-                      ['2', '3', '4', '5 dm', 'Нет'],
-                      ['1', '2', '3', '4 df', 'Нет'],
-                      ['2', '3', '4', '5 df', 'Нет']],
+            'equip': [],
             'invent': [],
             'characteristics': {
                 'Damage': 1,
-                'CritChance': 1,
                 'Armor': 1,
-                'HealPoints': 1,
-                'Agility': 1,
-                'Accurancy': 1,
+                'HealPoints': 1
             }
         }
         user = User(
@@ -130,13 +123,12 @@ def invent(a):
     return redirect('/inventar')
 
 
-
 def init_hero(name):
     co = sqlite3.connect('db/base.sqlite')
     cur = co.cursor()
     con.hero.name = name
     con.hero.data = eval(cur.execute('''SELECT data FROM users
-    WHERE name = ?''', (name, )).fetchall()[0][0])
+    WHERE name = ?''', (name,)).fetchall()[0][0])
     co.close()
 
 
