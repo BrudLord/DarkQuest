@@ -6,6 +6,7 @@ from work_with_db import db_session
 from forms.user import RegisterForm, LoginForm
 from work_with_db.Users import User
 from flask_login import LoginManager, login_user
+from locations import location_forest
 
 con.app = Flask(__name__)
 con.app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -310,8 +311,65 @@ def init_hero(name):
     co.close()
 
 
-#@con.app.route('/map')
-#def map():
+@con.app.route('/')
+def fight_window():
+    return render_template('fight.html')
+
+
+@con.app.route('/atk')
+def attack():
+    location_forest(fight_validator(attack(True)))
+
+
+@con.app.route('/defence')
+def defence():
+    location_forest(fight_validator(attack(False)))
+
+
+def fight_parser(file, elements_to_put):
+    with open(os.path.abspath(file), 'r') as file:
+        event_form = file.read().split('|')
+        for elem in event_form:
+            if elem in elements_to_put:
+                event_form[event_form.index(elem)] = str(elements_to_put[elem])
+        return (''.join(event_form))
+
+
+def fight_validator(data):
+    if data['status'] == 'processing':
+        return (fight_parser('monster_base_fight.txt'))
+    elif data['status'] == 'victory':
+        con.hero.data['in_battle'] = False
+        return (fight_parser('monster_base_win.txt', data))
+    elif data['status'] == 'lose':
+        con.hero.fight = False
+        return (fight_parser('monster_base_lose.txt', data))
+
+
+@con.app.route('/atkscr')
+def atk_screen(data=None):
+    if data is None:
+        with open(os.path.abspath('monster_still_fight.txt'), 'r', encoding='UTF-8') as template:
+            return (template.read())
+    else:
+        return data
+
+
+# Нужно создать три таких - по одной на каждую локацию.
+# WORK IN PROGRESS
+@con.app.route('/forest')
+def location_forest(atributes=None):
+    fight = con.hero.data['in_battle']
+    if fight is not True:
+        title = 'Dark Forest'
+        event_text = location_forest.next_event()
+    else:
+        event_text = atk_screen(atributes)
+    return render_template('forest.html', event_text=event_text, title=title, fight=con.hero.data['in_battle'])
+
+
+# @con.app.route('/map')
+# def map():
 #    return render_template('map.html')
 
 

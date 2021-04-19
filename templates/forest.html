@@ -59,16 +59,16 @@ const App = {
     methods: {
       promote(value) {
         if (value == '1') {
-            history.pushState('', '', '/forest_next');
+            history.pushState('', '', '/forest');
             window.location.reload();
         } else if (value == '2'){
             history.pushState('', '', '/main_window');
             window.location.reload();
         } else if (value == '3'){
-            history.pushState('', '', '/attack');
+            history.pushState('', '', '/atk');
             window.location.reload();
         } else if (value == '4'){
-            history.pushState('', '', '/defend');
+            history.pushState('', '', '/defence');
             window.location.reload();
         } else if (value == '5'){
             history.pushState('', '', '/inventar');

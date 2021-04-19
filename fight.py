@@ -57,29 +57,9 @@ def defence():
     location_forest(fight_validator(attack(True)))
 
 
-@app.route('/def')
+@app.route('/defence')
 def defence():
     location_forest(fight_validator(attack(False)))
-
-
-def fight_parser(file, elements_to_put):
-    with open(os.path.abspath(file), 'r') as file:
-        event_form = file.read().split('|')
-        for elem in event_form:
-            if elem in elements_to_put:
-                event_form[event_form.index(elem)] = str(elements_to_put[elem])
-        return (''.join(event_form))
-
-
-def fight_validator(data):
-    if data['status'] == 'processing':
-        return (fight_parser('monster_base_fight.txt'))
-    elif data['status'] == 'victory':
-        con.hero.data['in_battle'] = False
-        return (fight_parser('monster_base_win.txt', data))
-    elif data['status'] == 'lose':
-        con.hero.fight = False
-        return (fight_parser('monster_base_lose.txt', data))
 
 @app.route('/atkscr')
 def atk_screen(data=None):
@@ -101,6 +81,3 @@ def location_forest(atributes=None):
         event_text = atk_screen(atributes)
     return render_template('forest.html', event_text=event_text, title=title, fight=con.hero.data['in_battle'])
 
-
-if __name__ == '__main__':
-    app.run(port=8080, host='127.0.0.1')

@@ -1,6 +1,6 @@
 from random import *
 import os
-from config import *
+import config as con
 
 
 class Monster():
