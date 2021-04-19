@@ -62,7 +62,7 @@ def registration():
             'characteristics': {
                 'Damage': 1,
                 'Armor': 1,
-                'HealPoints': 1
+                'HealPoints': 25
             }
         }
         user = User(
@@ -114,16 +114,16 @@ def invent(a):
         if con.hero.data['equip'][a - 1][-1] == 'Да':
             con.hero.data['equip'][a - 1][-1] = 'Нет'
         else:
-            con.hero.data['equip'][a - 1][-1] = 'Да'
-            for i in range(len(con.hero.data['equip'])):
-                if a - 1 != i:
-                    if 'dm' in con.hero.data['equip'][a - 1][-2]:
-                        if 'dm' in con.hero.data['equip'][i][-2] and con.hero.data['equip'][i][-1] == 'Да':
-                            con.hero.data['equip'][i][-1] = 'Нет'
-                    else:
-                        if 'df' in con.hero.data['equip'][i][-2] and con.hero.data['equip'][i][-1] == 'Да':
-                            con.hero.data['equip'][i][-1] = 'Нет'
-
+            if con.hero.data['equip'][a - 1][1] <= con.hero.data['lvl']:
+                con.hero.data['equip'][a - 1][-1] = 'Да'
+                for i in range(len(con.hero.data['equip'])):
+                    if a - 1 != i:
+                        if 'dm' in con.hero.data['equip'][a - 1][-2]:
+                            if 'dm' in con.hero.data['equip'][i][-2] and con.hero.data['equip'][i][-1] == 'Да':
+                                con.hero.data['equip'][i][-1] = 'Нет'
+                        else:
+                            if 'df' in con.hero.data['equip'][i][-2] and con.hero.data['equip'][i][-1] == 'Да':
+                                con.hero.data['equip'][i][-1] = 'Нет'
         con.hero.total_dm = con.hero.data['characteristics']['Damage']
         con.hero.total_df = con.hero.data['characteristics']['Armor']
         for i in range(len(con.hero.data['equip'])):
