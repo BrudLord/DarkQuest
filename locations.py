@@ -41,7 +41,7 @@ class Location:
             con.hero.data['in_battle'] = True
             player_opponent = current_event()
             properties = player_opponent.info()
-            with open('monster_preview.txt', 'r') as file:
+            with open(os.path.abspath('static/events/monster_preview.txt'), 'r', encoding='UTF-8') as file:
                 event_form = file.read().split('|')
                 for elem in event_form:
                     if elem in properties:
@@ -56,7 +56,6 @@ class Location:
 
 class Rat(Monster):
     def __init__(self):
-        self.form = os.path.abspath()
         self.name = 'Small rat'
         self.lvl = 1
         self.atk = 4
@@ -73,6 +72,41 @@ class Rat(Monster):
                  'max_hp': -1,
                  'gold': -3})
 
+def attack(is_attack_postion):
+    monster_hp_before = player_id['opponent']['hp']
+    hero_hp_before = player_id['hp']
+    if player_id['in_battle'] is True:
+        if player_id['opponent']['hp'] > 0 and player_id['hp'] > 0:
+            if is_attack_postion:
+                if player_id['opponent']['defence'] < player_id['atk']:
+                    player_id['opponent']['hp'] -= player_id['atk'] - player_id['opponent']['defence']
+                else:
+                    player_id['opponent']['hp'] -= int(player_id['atk'] * 0.01) + 1
+                if player_id['opponent']['atk'] < player_id['defence']:
+                    player_id['hp'] -= player_id['opponent']['atk'] - player_id['defence']
+                else:
+                    player_id['hp'] -= int(player_id['opponent']['atk'] * 0.01) + 1
+            else:
+                if player_id['opponent']['defence'] < int((player_id['atk'] - 1) * 0.6) + 1:
+                    player_id['opponent']['hp'] -= int((player_id['atk'] - 1) * 0.6) + 1 - player_id['opponent'][
+                        'defence']
+                else:
+                    player_id['opponent']['hp'] -= 1
+                if player_id['opponent']['atk'] < int(player_id['defence'] * 1.5):
+                    player_id['hp'] -= player_id['opponent']['atk'] - player_id['defence']
+                else:
+                    player_id['hp'] -= 1
+            delta_monster_hp = monster_hp_before - player_id['opponent']['hp']
+            delta_hero_hp = hero_hp_before - player_id['hp']
+            return ({
+                'status': 'processing',
+                'delta_hero_hp': delta_hero_hp,
+                'delta_monster_hp': delta_monster_hp
+            })
+        elif player_id['hp'] <= 0:
+            return (player_id['opponent']['example'].lose(player_id))
+        elif player_id['opponent']['hp'] <= 0:
+            return (player_id['opponent']['example'].victory(player_id))
 
 
 
@@ -90,7 +124,7 @@ class Event:
 
     def execute(self):
         try:
-            with open(self.form, 'r') as file:
+            with open(self.form, 'r', encoding='UTF-8') as file:
                 event_form = file.read().split('|')
                 for elem in event_form:
                     if elem in self.properties:

@@ -317,7 +317,7 @@ def fight_window():
 
 
 @con.app.route('/atk')
-def attack():
+def attk():
     location_forest(fight_validator(attack(True)))
 
 
@@ -327,7 +327,7 @@ def defence():
 
 
 def fight_parser(file, elements_to_put):
-    with open(os.path.abspath(file), 'r') as file:
+    with open(os.path.abspath('static/events/' + file), 'r', encoding='UTF-8') as file:
         event_form = file.read().split('|')
         for elem in event_form:
             if elem in elements_to_put:
@@ -349,7 +349,7 @@ def fight_validator(data):
 @con.app.route('/atkscr')
 def atk_screen(data=None):
     if data is None:
-        with open(os.path.abspath('monster_still_fight.txt'), 'r', encoding='UTF-8') as template:
+        with open(os.path.abspath('static/events/monster_still_fight.txt'), 'r', encoding='UTF-8') as template:
             return (template.read())
     else:
         return data
@@ -358,12 +358,13 @@ def atk_screen(data=None):
 # Нужно создать три таких - по одной на каждую локацию.
 # WORK IN PROGRESS
 @con.app.route('/forest')
-def location_forest(atributes=None):
+def location_forest_trip(atributes=None):
     fight = con.hero.data['in_battle']
     if fight is not True:
         title = 'Dark Forest'
-        event_text = location_forest.next_event()
+        event_text = location_forest.next_event()['text']
     else:
+        title = 'Dark Fight'
         event_text = atk_screen(atributes)
     return render_template('forest.html', event_text=event_text, title=title, fight=con.hero.data['in_battle'])
 

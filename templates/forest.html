@@ -18,10 +18,11 @@
         position: absolute;
         margin-left: 800px;
         }
-        #leave {
+        #left {
         bottom: 50px;
         position: absolute;
         margin-left: -350px}
+
     </style>
     <title>{{title}}</title>
 </head>
@@ -32,23 +33,20 @@
         {{ event_text }}
     </center>
     <div id='app'>
-    {% if fight == True %}
+        {% if fight == True %}
         <button v-on:click="promote(3)" class="btn btn-lg btn-danger">Атака</button>
         <button v-on:click="promote(4)" class="btn btn-lg btn-primary">Защита</button>
         <button v-on:click="promote(6)" class="btn btn-lg btn-success">Выпить зеллье здоровья</button>
-    {% endif %}
-        <button v-on:click="promote(1)" class="btn btn-lg btn-danger">Идем дальше</button>
-        <button v-on:click="promote(2)" class="btn btn-lg btn-primary">В город</button>
-        <button v-on:click="promote(5)" class="btn btn-lg btn-warning">Инвентарь</button>
-</div>
-    <div id='leave'>
-        {% if fight == True %}
         <button v-on:click="promote(7)" class="btn btn-lg btn-info">Сбежать</button>
         {% endif %}
+        {% if fight == False %}
+        <button v-on:click="promote(1)" class="btn btn-lg btn-danger">Идем дальше</button>
+        <button v-on:click="promote(2)" class="btn btn-lg btn-primary">В город</button>
+        {% endif %}
     </div>
-<script src="https://unpkg.com/vue@next"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script>
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
 
 const App = {
     data() {
@@ -58,26 +56,25 @@ const App = {
     },
     methods: {
       promote(value) {
+        console.log(value);
         if (value == '1') {
             history.pushState('', '', '/forest');
             window.location.reload();
-        } else if (value == '2'){
+        } else if (value == '2') {
             history.pushState('', '', '/main_window');
             window.location.reload();
-        } else if (value == '3'){
+        } else if (value == '3') {
             history.pushState('', '', '/atk');
             window.location.reload();
-        } else if (value == '4'){
+        } else if (value == '4') {
             history.pushState('', '', '/defence');
             window.location.reload();
-        } else if (value == '5'){
-            history.pushState('', '', '/inventar');
-            window.location.reload();
-        } else if (value == '6'){
+        } else if (value == '6') {
             history.pushState('', '', '/drink_hp');
             window.location.reload();
-        } else if (value == '7'){
-            history.pushState('', '', '/you_are_looser');
+        } else if (value == '7') {
+            console.log(value);
+            history.pushState('', '', '/main_window');
             window.location.reload();
         }
       },
@@ -85,7 +82,8 @@ const App = {
 }
 
 Vue.createApp(App).mount('#app')
-</script>
+
+    </script>
 
 </main>
 </body>
