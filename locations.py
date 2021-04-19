@@ -11,10 +11,10 @@ class Monster():
         self.defence = 0
         self.hp = 0
 
-    def victory(self, player_id):
+    def victory(self):
         pass
 
-    def lose(self, player_id):
+    def lose(self):
         pass
 
     def info(self):
@@ -33,16 +33,24 @@ class Location:
         self.events = events
         self.all_options = [self.monsters, self.events]
 
-    def next_event(self, player_id):
+    def next_event(self):
+        global player_opponent
         current_event = choice(choice(self.all_options))
         if current_event in self.monsters:
-            # Budimir-to-check
-            player_id['in_battle'] = True
-            player_opponent = current_event
-            player_id['opponent'] = player_opponent.info()
-            player_id['opponent']['example'] = player_opponent
+            con.hero.data['in_battle'] = True
+            player_opponent = current_event()
+            properties = player_opponent.info()
+            with open('monster_preview.txt', 'r') as file:
+                event_form = file.read().split('|')
+                for elem in event_form:
+                    if elem in properties:
+                        event_form[event_form.index(elem)] = str(properties[elem])
+                return ({'text': ''.join(event_form),
+                         'stats': properties})
+
         else:
             return (current_event.execute())
+
 
 
 class Rat(Monster):
@@ -54,18 +62,17 @@ class Rat(Monster):
         self.defence = 1
         self.hp = 10
 
-    def victory(self, player_id):
+    def victory(self):
         return ({'status': 'victory',
                  'exp': 15,
                  'gold': 3})
 
-    def lose(self, player_id):
+    def lose(self):
         return ({'status': 'lose',
                  'max_hp': -1,
                  'gold': -3})
 
 
-Rat_monstr = Rat
 
 
 class Event:
@@ -100,6 +107,8 @@ Waterfall = Event(form=os.path.abspath('static/events/waterfall.txt'),
                               'atk': 0,
                               'gold': 0,
                               'exp': 0})
+
+location_forest = Location([Rat], [Waterfall])
 
 # DarkQuest/location/monstr/to_do
 
