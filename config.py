@@ -11,6 +11,9 @@ def check_lvl():
     if hero.data['exp'] >= 10 * 2 ** (hero.data['lvl'] + 2):
         hero.data['exp'] -= 10 * 2 ** (hero.data['lvl'] + 2)
         hero.data['lvl'] += 1
+        hero.data['characteristics']['Damage'] += 1
+        hero.data['characteristics']['Armor'] += 1
+        hero.data['characteristics']['HealPoints'] += 25
         co = sqlite3.connect('db/base.sqlite')
         cur = co.cursor()
         resulte = cur.execute('''UPDATE users
