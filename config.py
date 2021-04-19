@@ -7,7 +7,7 @@ logged_in = False
 hero = player.Hero()
 
 
-def check_lvl():
+def check_player_stats():
     if hero.data['exp'] >= 10 * 2 ** (hero.data['lvl'] + 2):
         hero.data['exp'] -= 10 * 2 ** (hero.data['lvl'] + 2)
         hero.data['lvl'] += 1
@@ -20,3 +20,7 @@ def check_lvl():
             SET data = ? 
             WHERE name = ?''', (str(hero.data), hero.name,))
         co.commit()
+    if hero.data['c_hp'] > hero.data['characteristics']['HealPoints']:
+        hero.data['c_hp'] = hero.data['characteristics']['HealPoints']
+    if hero.data['money'] < 0:
+        hero.data['money'] = 0

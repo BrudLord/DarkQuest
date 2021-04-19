@@ -6,7 +6,7 @@ from work_with_db import db_session
 from forms.user import RegisterForm, LoginForm
 from work_with_db.Users import User
 from flask_login import LoginManager, login_user
-from locations import location_forest
+from locations import location_forest, attack
 
 con.app = Flask(__name__)
 con.app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -58,6 +58,7 @@ def registration():
             'money': 10000,
             'in_battle': False,
             'exp': 0,
+            'c_hp': 25,
             'equip': [],
             'invent': [],
             'characteristics': {
@@ -311,19 +312,18 @@ def init_hero(name):
     co.close()
 
 
-@con.app.route('/')
-def fight_window():
-    return render_template('fight.html')
-
-
 @con.app.route('/atk')
 def attk():
-    location_forest(fight_validator(attack(True)))
+    if con.hero.name is None:
+        return redirect('/log_in')
+    return location_forest_trip(fight_validator(attack(True)))
 
 
 @con.app.route('/defence')
 def defence():
-    location_forest(fight_validator(attack(False)))
+    if con.hero.name is None:
+        return redirect('/log_in')
+    return location_forest_trip(fight_validator(attack(False)))
 
 
 def fight_parser(file, elements_to_put):
@@ -337,7 +337,7 @@ def fight_parser(file, elements_to_put):
 
 def fight_validator(data):
     if data['status'] == 'processing':
-        return (fight_parser('monster_base_fight.txt'))
+        return (fight_parser('monster_base_fight.txt', data))
     elif data['status'] == 'victory':
         con.hero.data['in_battle'] = False
         return (fight_parser('monster_base_win.txt', data))
@@ -348,6 +348,8 @@ def fight_validator(data):
 
 @con.app.route('/atkscr')
 def atk_screen(data=None):
+    if con.hero.name is None:
+        return redirect('/log_in')
     if data is None:
         with open(os.path.abspath('static/events/monster_still_fight.txt'), 'r', encoding='UTF-8') as template:
             return (template.read())
@@ -359,14 +361,23 @@ def atk_screen(data=None):
 # WORK IN PROGRESS
 @con.app.route('/forest')
 def location_forest_trip(atributes=None):
+    if con.hero.name is None:
+        return redirect('/log_in')
     fight = con.hero.data['in_battle']
-    if fight is not True:
+    if fight is not True and atributes is None:
         title = 'Dark Forest'
         event_text = location_forest.next_event()['text']
     else:
         title = 'Dark Fight'
         event_text = atk_screen(atributes)
     return render_template('forest.html', event_text=event_text, title=title, fight=con.hero.data['in_battle'])
+
+
+@con.app.route('/global_map')
+def global_map():
+    if con.hero.name is None:
+        return redirect('/log_in')
+    return render_template('map.html')
 
 
 # @con.app.route('/map')
