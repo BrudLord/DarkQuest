@@ -310,9 +310,9 @@ def init_hero(name):
     co.close()
 
 
-@con.app.route('/map')
-def map():
-    return render_template('map.html')
+#@con.app.route('/map')
+#def map():
+#    return render_template('map.html')
 
 
 if __name__ == '__main__':

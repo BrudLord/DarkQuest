@@ -1,4 +1,6 @@
+import player
+
+
 app = None
 logged_in = False
-
-player_opponent = ()
+hero = player.Hero()

@@ -1,5 +1,6 @@
 from random import *
 import os
+from config import *
 
 
 class Monster():
