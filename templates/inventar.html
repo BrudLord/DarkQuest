@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link type="text/css"
+          rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+          crossorigin="anonymous">
+<link rel="stylesheet"
+          type="text/css"
+          href="/static/css/inventar.css">
+<img src="static/img/hero.png" class="imag">
+<div class="lvl">Уровень: {{level}}</div>
+<table class="table_blur table_2 scrolling2">
+  <tr>
+    {% for i in tables['table_2']['header'] %}
+      <th>{{ i }}</th>
+    {% endfor %}
+    </tr>
+  {% for i in tables['table_2']['equip'] %}
+  <tr>
+    {% for j in i %}
+      <td>{{ j }}</td>
+    {% endfor %}
+  </tr>
+  {% endfor %}
+</table>
+<table class="table_blur table_3">
+  <tr>
+    {% for i in tables['table_3']['header'] %}
+      <th>{{ i }}</th>
+    {% endfor %}
+    </tr>
+  {% for i in tables['table_3']['invent'] %}
+  <tr>
+    {% for j in i %}
+      <td>{{ j }}</td>
+    {% endfor %}
+  </tr>
+  {% endfor %}
+</table>
+<table class="table_blur table_1">
+  <tr>
+    {% for i in tables['table_1']['header'] %}
+      <th>{{ i }}</th>
+    {% endfor %}
+    </tr>
+  {% for i in tables['table_1']['character'] %}
+  <tr>
+    {% for j in i %}
+      <td>{{ j }}</td>
+    {% endfor %}
+  </tr>
+  {% endfor %}
+</table>
+<div id='app'>
+    <button v-on:click="promote(1)" class="btn btn-lg btn-danger btn">В главное меню</button>
+</div>
+<script src="https://unpkg.com/vue@next"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+const App = {
+    data() {
+        return {
+           test: {},
+        }
+    },
+    methods: {
+      promote(value) {
+        if (value == '1') {
+            history.pushState('', '', '/main_window');
+            window.location.reload();
+        }
+      },
+    }
+}
+Vue.createApp(App).mount('#app')
+</script>
+<script>
+document.querySelector('table').onclick = (event) => {
+  let cell = event.target;
+  if (cell.tagName.toLowerCase() != 'td')
+    return;
+  let i = cell.parentNode.rowIndex;
+  let j = cell.cellIndex;
+  /*let table = document.querySelector('table');
+  for (var m = 0; m < table.rows.length; m++) {
+    for (var n = 0; n < table.rows[m].cells.length; n++) {
+      if (table.rows[m].cells[n] == cell) {
+        i = m;
+        j = n;
+      }
+    }
+  }*/
+  history.pushState('', '', '/inventar_tranzit/' + String(i));
+  window.location.reload();
+}
+</script>
+{% endblock %}

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Корзина</title>
+    <link type="text/css"
+          rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+          crossorigin="anonymous">
+    <meta charset="UTF-8">
+</head>
+<body>
+<h3>Придмет: {{item}}</h3>
+<div>Полное описание: id, name, lvl, rare, cost, DEF</div>
+<div>{{full}}</div>
+<form action="/buy_armor" method="POST">
+<input name="test" value="{{item}}" readonly>
+<input type="submit" value="Купить">
+</form>
+<div><form action="http://127.0.0.1:8080/armor"><button class="btn btn-lg btn-danger">назад</button></form></div>
+</body>
+</html>

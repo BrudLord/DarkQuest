@@ -5,10 +5,13 @@ from wtforms.validators import DataRequired
 
 
 class RegisterForm(FlaskForm):
-    name = StringField('Имя пользователя', validators=[DataRequired()])
-    password = PasswordField('Пароль', validators=[DataRequired()])
-    reg = SubmitField('Зарегестрироваться')
+    name = StringField('Как звать тебя, странник?', validators=[DataRequired()])
+    password = PasswordField('Секретный пароль', validators=[DataRequired()])
+    password_again = PasswordField('Повтори его', validators=[DataRequired()])
+    reg = SubmitField('Вступить в гильдию кашеваров')
 
 
 class LoginForm(FlaskForm):
+    name = StringField('Как звать тебя, странник?', validators=[DataRequired()])
+    password = PasswordField('Секретный пароль', validators=[DataRequired()])
     log = SubmitField('Войти')

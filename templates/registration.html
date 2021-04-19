@@ -1,9 +1,11 @@
 {% extends "base_rl_form.html" %}
 
 {% block content %}
+<link rel="stylesheet"
+          type="text/css"
+          href="/static/css/registration.css">
 <center>
-    <h1> Добро пожаловать... </h1>
-    <h2> Пожалуйста, пройдите регистрацию или авторизуйтесь. </h2>
+    <h1> Анкета в гильдию </h1>
 </center>
 <form action="" method="post">
     {{ form.hidden_tag() }}
@@ -25,11 +27,20 @@
             </p>
         {% endfor %}
     </p>
+    <p>
+        {{ form.password_again.label }}<br>
+        {{ form.password_again(class="form-control", type="password") }}<br>
+        {% for error in form.password_again.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
     {{ message }}
-    <p>{{ form.log(type="submit", class="btn btn-lg btn-danger") }}</p>
+    <p>{{ form.reg(type="submit", class="btn btn-lg btn-danger") }}</p>
 </form>
 <div id='app'>
-    <button v-on:click="promote(1)" class="btn btn-lg btn-danger">К регистрации</button>
+    <button v-on:click="promote(1)" class="btn btn-lg btn-danger">К авторизации</button>
 </div>
 <script src="https://unpkg.com/vue@next"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -44,7 +55,7 @@ const App = {
     methods: {
       promote(value) {
         if (value == '1') {
-            history.pushState('', '', '/registration');
+            history.pushState('', '', '/log_in');
             window.location.reload();
         }
       },
