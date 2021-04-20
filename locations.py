@@ -142,7 +142,7 @@ class Event:
 
 
 Waterfall = Event(form=os.path.abspath('static/events/waterfall.txt'),
-                  properties={'c_hp': 0})
+                  properties={'c_hp': 10})
 
 location_forest = Location([Rat], [Waterfall])
 
