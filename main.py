@@ -313,27 +313,6 @@ def init_hero(name):
     co.close()
 
 
-@con.app.route('/atk')
-def attk():
-    if con.hero.name is None:
-        return redirect('/log_in')
-    try:
-        return location_forest_trip(fight_validator(attack(True)))
-    except Exception:
-        return redirect('/forest')
-
-
-
-@con.app.route('/defence')
-def defence():
-    if con.hero.name is None:
-        return redirect('/log_in')
-    try:
-        return location_forest_trip(fight_validator(attack(False)))
-    except Exception:
-        return redirect('/forest')
-
-
 def fight_parser(file, elements_to_put):
     with open(os.path.abspath('static/events/' + file), 'r', encoding='UTF-8') as file:
         event_form = file.read().split('|')
@@ -364,13 +343,7 @@ def atk_screen(data=None):
     else:
         return data
 
-@con.app.route('/drink_hp')
-def healpot():
-    if con.hero.data['invent'].count('хилка') > 0:
-        con.hero.data['invent'].pop(con.hero.data['invent'].index('хилка'))
-        con.hero.data['c_hp'] += 5 * con.hero.data['lvl']
-        con.check_player_stats()
-    return redirect('/forest')
+
 # Нужно создать три таких - по одной на каждую локацию.
 # WORK IN PROGRESS
 @con.app.route('/forest')
@@ -388,6 +361,121 @@ def location_forest_trip(atributes=None):
                            my_hp=con.hero.data['c_hp'], mon_hp=con.hero.data['m_hp'])
 
 
+@con.app.route('/drink_hp')
+def healpot():
+    if con.hero.data['invent'].count('хилка') > 0:
+        con.hero.data['invent'].pop(con.hero.data['invent'].index('хилка'))
+        con.hero.data['c_hp'] += 5 * con.hero.data['lvl']
+        con.check_player_stats()
+    return redirect('/forest')
+
+
+@con.app.route('/atk')
+def attk():
+    if con.hero.name is None:
+        return redirect('/log_in')
+    try:
+        return location_forest_trip(fight_validator(attack(True)))
+    except Exception:
+        return redirect('/forest')
+
+
+@con.app.route('/defence')
+def defence():
+    if con.hero.name is None:
+        return redirect('/log_in')
+    try:
+        return location_forest_trip(fight_validator(attack(False)))
+    except Exception:
+        return redirect('/forest')
+
+
+@con.app.route('/fields')
+def location_fields_trip(atributes=None):
+    if con.hero.name is None:
+        return redirect('/log_in')
+    fight = con.hero.data['in_battle']
+    if fight is not True and atributes is None:
+        title = 'Dark Field'
+        event_text = location_forest.next_event()['text']
+    else:
+        title = 'Dark Fight'
+        event_text = atk_screen(atributes)
+    return render_template('field.html', event_text=event_text, title=title, fight=con.hero.data['in_battle'],
+                           my_hp=con.hero.data['c_hp'], mon_hp=con.hero.data['m_hp'])
+
+
+@con.app.route('/fdrink_hp')
+def fhealpot():
+    if con.hero.data['invent'].count('хилка') > 0:
+        con.hero.data['invent'].pop(con.hero.data['invent'].index('хилка'))
+        con.hero.data['c_hp'] += 5 * con.hero.data['lvl']
+        con.check_player_stats()
+    return redirect('/forest')
+
+
+@con.app.route('/fatk')
+def fattk():
+    if con.hero.name is None:
+        return redirect('/log_in')
+    try:
+        return location_forest_trip(fight_validator(attack(True)))
+    except Exception:
+        return redirect('/forest')
+
+
+@con.app.route('/fdefence')
+def fdefence():
+    if con.hero.name is None:
+        return redirect('/log_in')
+    try:
+        return location_forest_trip(fight_validator(attack(False)))
+    except Exception:
+        return redirect('/forest')
+
+
+@con.app.route('/caves')
+def location_caves_trip(atributes=None):
+    if con.hero.name is None:
+        return redirect('/log_in')
+    fight = con.hero.data['in_battle']
+    if fight is not True and atributes is None:
+        title = 'Dark Caves'
+        event_text = location_forest.next_event()['text']
+    else:
+        title = 'Dark Fight'
+        event_text = atk_screen(atributes)
+    return render_template('cave.html', event_text=event_text, title=title, fight=con.hero.data['in_battle'],
+                           my_hp=con.hero.data['c_hp'], mon_hp=con.hero.data['m_hp'])
+
+
+@con.app.route('/cdrink_hp')
+def chealpot():
+    if con.hero.data['invent'].count('хилка') > 0:
+        con.hero.data['invent'].pop(con.hero.data['invent'].index('хилка'))
+        con.hero.data['c_hp'] += 5 * con.hero.data['lvl']
+        con.check_player_stats()
+    return redirect('/forest')
+
+
+@con.app.route('/catk')
+def cattk():
+    if con.hero.name is None:
+        return redirect('/log_in')
+    try:
+        return location_forest_trip(fight_validator(attack(True)))
+    except Exception:
+        return redirect('/forest')
+
+
+@con.app.route('/cdefence')
+def cdefence():
+    if con.hero.name is None:
+        return redirect('/log_in')
+    try:
+        return location_forest_trip(fight_validator(attack(False)))
+    except Exception:
+        return redirect('/forest')
 
 
 @con.app.route('/global_map')

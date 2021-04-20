@@ -3,6 +3,8 @@ import os
 import config as con
 
 m_properties = {}
+
+
 class Monster():
     def __init__(self):
         self.form = ''
@@ -55,6 +57,7 @@ class Location:
             return (current_event.execute())
 
 
+# Объявление монтра
 class Rat(Monster):
     def __init__(self):
         self.name = 'Small rat'
@@ -147,9 +150,10 @@ class Event:
             return ({'text': 'Error with file "' + self.form + '".'})
 
 
+# Объявление эвента
 Waterfall = Event(form=os.path.abspath('static/events/waterfall.txt'),
                   properties={'hp': 10})
-
+# Объявление локации
 location_forest = Location([Rat], [Waterfall])
 
 # DarkQuest/location/monstr/to_do
