@@ -18,25 +18,34 @@
         position: absolute;
         margin-left: 800px;
         }
-        #left {
+        #y_hp {
         bottom: 50px;
+        text-align: left;
         position: absolute;
-        margin-left: -350px}
-
+        margin-left: 0%}
+        p {
+   color: #65000b
+}
     </style>
     <title>{{title}}</title>
 </head>
-<body background="/static/img/forest_loc.jpg">
+<body background="/static/img/forest_loc2.png">
 <main role="main" class="container">
     <center>
         <h1> Дремучие леса</h1>
-        {{ event_text }}
+        <p>{{ event_text }}</p>
     </center>
+        {% if fight == True %}
+    <p>HP монстра: {{mon_hp}}</p>
+    {% endif %}
+    <div id='y_hp'>
+        <p>HP героя: {{my_hp}}</p>
+    </div>
     <div id='app'>
         {% if fight == True %}
         <button v-on:click="promote(3)" class="btn btn-lg btn-danger">Атака</button>
         <button v-on:click="promote(4)" class="btn btn-lg btn-primary">Защита</button>
-        <button v-on:click="promote(6)" class="btn btn-lg btn-success">Выпить зеллье здоровья</button>
+        <button v-on:click="promote(6)" class="btn btn-lg btn-success">Выпить зелье здоровья</button>
         <button v-on:click="promote(7)" class="btn btn-lg btn-info">Сбежать</button>
         {% endif %}
         {% if fight == False %}
@@ -69,7 +78,7 @@ const App = {
         } else if (value == '4') {
             history.pushState('', '', '/defence');
             window.location.reload();
-        } else if (value == '90') {
+        } else if (value == '6') {
             history.pushState('', '', '/drink_hp');
             window.location.reload();
         } else if (value == '7') {

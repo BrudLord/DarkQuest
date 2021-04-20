@@ -2,7 +2,7 @@ from random import *
 import os
 import config as con
 
-
+m_properties = {}
 class Monster():
     def __init__(self):
         self.form = ''
@@ -36,12 +36,13 @@ class Location:
 
     def next_event(self):
         global player_opponent
-        global m_properties
         current_event = choice(choice(self.all_options))
         if current_event in self.monsters:
             con.hero.data['in_battle'] = True
             player_opponent = current_event()
+            global m_properties
             m_properties = player_opponent.info()
+            con.hero.data['m_hp'] = m_properties['hp']
             with open(os.path.abspath('static/events/monster_preview.txt'), 'r', encoding='UTF-8') as file:
                 event_form = file.read().split('|')
                 for elem in event_form:
@@ -64,14 +65,17 @@ class Rat(Monster):
 
     def victory(self):
         con.hero.data['money'] += 3
+        con.hero.data['exp'] += 150
+        con.check_player_stats()
         return ({'status': 'victory',
-                 'exp': 0,
+                 'exp': 15,
                  'money': 3})
 
     def lose(self):
         con.hero.data['money'] -= 3
         con.hero.data['c_hp'] = 15
         con.check_player_stats()
+        con.hero.data['in_battle'] = False
         return ({'status': 'lose',
                  'money': -3})
 
@@ -104,6 +108,7 @@ def attack(is_attack_postion):
                     con.hero.data['c_hp'] -= 1
             delta_monster_hp = monster_hp_before - m_properties['hp']
             delta_hero_hp = hero_hp_before - con.hero.data['c_hp']
+            con.hero.data['m_hp'] = m_properties['hp']
             return ({
                 'status': 'processing',
                 'delta_hero_hp': delta_hero_hp,
@@ -135,6 +140,7 @@ class Event:
                     if elem in self.properties:
                         event_form[event_form.index(elem)] = str(self.properties[elem])
                 con.hero.data['c_hp'] += self.properties['hp']
+                con.check_player_stats()
                 return ({'text': ''.join(event_form),
                          'stats': self.properties})
         except Exception:
@@ -142,7 +148,7 @@ class Event:
 
 
 Waterfall = Event(form=os.path.abspath('static/events/waterfall.txt'),
-                  properties={'c_hp': 10})
+                  properties={'hp': 10})
 
 location_forest = Location([Rat], [Waterfall])
 

@@ -6,7 +6,7 @@ from work_with_db import db_session
 from forms.user import RegisterForm, LoginForm
 from work_with_db.Users import User
 from flask_login import LoginManager, login_user
-from locations import location_forest, attack
+from locations import location_forest, attack, m_properties
 
 con.app = Flask(__name__)
 con.app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -59,6 +59,7 @@ def registration():
             'in_battle': False,
             'exp': 0,
             'c_hp': 25,
+            'm_hp': 0,
             'equip': [],
             'invent': [],
             'characteristics': {
@@ -316,14 +317,21 @@ def init_hero(name):
 def attk():
     if con.hero.name is None:
         return redirect('/log_in')
-    return location_forest_trip(fight_validator(attack(True)))
+    try:
+        return location_forest_trip(fight_validator(attack(True)))
+    except Exception:
+        return redirect('/forest')
+
 
 
 @con.app.route('/defence')
 def defence():
     if con.hero.name is None:
         return redirect('/log_in')
-    return location_forest_trip(fight_validator(attack(False)))
+    try:
+        return location_forest_trip(fight_validator(attack(False)))
+    except Exception:
+        return redirect('/forest')
 
 
 def fight_parser(file, elements_to_put):
@@ -356,7 +364,13 @@ def atk_screen(data=None):
     else:
         return data
 
-
+@con.app.route('/drink_hp')
+def healpot():
+    if con.hero.data['invent'].count('хилка') > 0:
+        con.hero.data['invent'].pop(con.hero.data['invent'].index('хилка'))
+        con.hero.data['c_hp'] += 5 * con.hero.data['lvl']
+        con.check_player_stats()
+    return redirect('/forest')
 # Нужно создать три таких - по одной на каждую локацию.
 # WORK IN PROGRESS
 @con.app.route('/forest')
@@ -370,7 +384,10 @@ def location_forest_trip(atributes=None):
     else:
         title = 'Dark Fight'
         event_text = atk_screen(atributes)
-    return render_template('forest.html', event_text=event_text, title=title, fight=con.hero.data['in_battle'])
+    return render_template('forest.html', event_text=event_text, title=title, fight=con.hero.data['in_battle'],
+                           my_hp=con.hero.data['c_hp'], mon_hp=con.hero.data['m_hp'])
+
+
 
 
 @con.app.route('/global_map')
