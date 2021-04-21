@@ -5,7 +5,7 @@ import config as con
 m_properties = {}
 
 
-class Monster():
+class Monster:
     def __init__(self):
         self.form = ''
         self.name = 'Void creature'
@@ -261,7 +261,7 @@ class Sharik(Monster):
                  'money': -300})
 
 
-class dart_smesharus(Monster):
+class Dart_smesharus(Monster):
     def __init__(self):
         self.name = 'Дарт смешарус'
         self.lvl = 20
@@ -382,7 +382,7 @@ class Event:
 Waterfall = Event(form=os.path.abspath('static/events/waterfall.txt'),
                   properties={'hp': 10})
 # Объявление локации
-location_forest = Location([Rat, Big_rat, Fire_rat, Opa, Small_Supoed, Satanuga, Supoed, Big_Supoed, dart_smesharus,
+location_forest = Location([Rat, Big_rat, Fire_rat, Opa, Small_Supoed, Satanuga, Supoed, Big_Supoed, Dart_smesharus,
                             Sharik], [Waterfall])
 
 # DarkQuest/location/monstr/to_do
