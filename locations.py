@@ -47,9 +47,11 @@ class Event:
         try:
             with open(self.form, 'r', encoding='UTF-8') as file:
                 event_form = file.read().split('|')
+                print(0)
                 for elem in event_form:
                     if elem in self.properties:
                         event_form[event_form.index(elem)] = str(self.properties[elem])
+                print(1)
                 con.hero.data['c_hp'] += self.properties['hp']
                 con.hero.data['money'] += self.properties['money']
                 con.hero.data['characteristics']['Damage'] += self.properties['dm']
@@ -57,7 +59,9 @@ class Event:
                 con.hero.data['characteristics']['HealPoints'] += self.properties['HealPoints']
                 con.hero.data['exp'] += self.properties['exp']
                 con.hero.data['lvl'] += self.properties['lvl']
+                print(1.5)
                 con.check_player_stats()
+                print(2)
                 return ({'text': ''.join(event_form),
                          'stats': self.properties})
         except Exception:
@@ -79,6 +83,7 @@ class Location:
             global m_properties
             m_properties = player_opponent.info()
             if con.hero.data['lvl'] <= 5 and con.hero.data['lvl'] < m_properties['lvl']:
+                con.hero.data['in_battle'] = False
                 return self.next_event()
             con.hero.data['m_hp'] = m_properties['hp']
             with open(os.path.abspath('static/events/monster_preview.txt'), 'r', encoding='UTF-8') as file:
@@ -338,6 +343,7 @@ class Necr(Monster):
         con.hero.data['in_battle'] = False
         return ({'status': 'lose',
                  'money': -39})
+
 
 # Объявление монтров пещер
 class Demonic_kashevar_1(Monster):
@@ -789,6 +795,7 @@ class Boss(Monster):
         return ({'status': 'lose',
                  'money': -1500})
 
+
 # Объявление монтров леса
 class Big_rat(Monster):
     def __init__(self):
@@ -992,6 +999,7 @@ class Dart_smesharus(Monster):
         return ({'status': 'lose',
                  'money': -3000})
 
+
 class Satanuga(Monster):
     def __init__(self):
         self.name = 'АЦЦЦкий Сатанюга666'
@@ -1026,30 +1034,32 @@ Waterfall = Event(form=os.path.abspath('static/events/waterfall.txt'),
 
 
 Backpack = Event(form=os.path.abspath('static/events/backpack.txt'),
-                 properties={'money': -5 * con.hero.data['lvl']})
-ChickenFight_win = Event(form=os.path.abspath('static/events/chickenfight_win.txt'),
+                 properties={'money': -50})
+ChickenFight_win = Event(form=os.path.abspath('static/events/chikenfight_win.txt'),
                          properties={'money': randint(185, 215)})
 ChickenFight_lose = Event(form=os.path.abspath('static/events/chickenfight_lose.txt'),
                           properties={'money': -randint(125, 156)})
 ChickenFight_neutral = Event(form=os.path.abspath('static/events/chickenfight_neutral.txt'),
-                             properties={'dm': 1})
+                             properties={'dm': 1, 'HealPoints': -1})
 Farmer = Event(form=os.path.abspath('static/events/farmer.txt'),
-               properties={'hp': 5 * con.hero.data['lvl']})
-ForestTraining = Event(form=os.path.abspath('static/events/forest_training.txt'),
-                       properties={'HealPoints': 5 * (con.hero.data['invent'].count('манка') // 15),
-                                   'dm': (con.hero.data['invent'].count('манка') // 15),
-                                   'arm': (con.hero.data['invent'].count('манка') // 15)})
+               properties={'hp': 25, 'money': -2})
+#ForestTraining = Event(form=os.path.abspath('static/events/forest_training.txt'),
+#                       properties={'HealPoints': 5 * (con.hero.data['invent'].count('манка') // 15),
+#                                   'dm': (con.hero.data['invent'].count('манка') // 15),
+#                                   'arm': (con.hero.data['invent'].count('манка') // 15)})
 GoblinEvent = Event(form=os.path.abspath('static/events/goblin.txt'),
-                    properties={'money': -10 * con.hero.data['lvl']})
+                    properties={'money': -10})
 Graveyard = Event(form=os.path.abspath('static/events/goblin.txt'),
-                  properties={'money': (-100 // con.hero.data['lvl'])})
+                  properties={'money': (-100)})
 KnightEvent = Event(form=os.path.abspath('static/events/goblin.txt'), properties={})
 
 # Объявление локации
 location_forest = Location([Rat, Big_rat, Fire_rat, Opa, Small_Supoed, Satanuga, Supoed, Big_Supoed, Dart_smesharus,
-                            Sharik], [Waterfall])
+                            Sharik], [Waterfall, Graveyard])
 location_caves = Location([Demonic_kashevar_1, Demonic_kashevar_2, Demonic_kashevar_3,
                            Demonic_kashevar_4, Demonic_kashevar_5, Cultist_1, Cultist_2,
                            Cultist_3, Cultist_4, Cultist_5, Lich_1, Lich_2, Lich_3, Strange_thing_1,
-                           Strange_thing_2, Strange_thing_3, Strange_thing_4] * 10 + [Boss], [Waterfall])
-location_fields = Location([Mouse, Rat, Rat, Volf, Volf, Volf, Volf, Fox, Fox, Fox, Rob, Necr], [Waterfall])
+                           Strange_thing_2, Strange_thing_3, Strange_thing_4] * 10 + [Boss], [Waterfall, GoblinEvent])
+location_fields = Location([Mouse, Rat, Rat, Volf, Volf, Volf, Volf, Fox, Fox, Fox, Rob, Necr],
+                           [Farmer, ChickenFight_lose, ChickenFight_neutral, ChickenFight_win, Backpack,
+                            KnightEvent])

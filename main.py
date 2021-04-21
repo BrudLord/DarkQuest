@@ -9,6 +9,7 @@ from flask_login import LoginManager, login_user
 from locations import location_forest, location_caves, location_fields, attack
 
 
+
 con.app = Flask(__name__)
 con.app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
