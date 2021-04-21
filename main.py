@@ -6,6 +6,7 @@ from work_with_db import db_session
 from forms.user import RegisterForm, LoginForm
 from work_with_db.Users import User
 from flask_login import LoginManager, login_user
+from locations import location_forest, attack, m_properties
 
 con.app = Flask(__name__)
 con.app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -57,12 +58,14 @@ def registration():
             'money': 10000,
             'in_battle': False,
             'exp': 0,
+            'c_hp': 25,
+            'm_hp': 0,
             'equip': [],
             'invent': [],
             'characteristics': {
                 'Damage': 1,
                 'Armor': 1,
-                'HealPoints': 1
+                'HealPoints': 25
             }
         }
         user = User(
@@ -114,16 +117,16 @@ def invent(a):
         if con.hero.data['equip'][a - 1][-1] == 'Да':
             con.hero.data['equip'][a - 1][-1] = 'Нет'
         else:
-            con.hero.data['equip'][a - 1][-1] = 'Да'
-            for i in range(len(con.hero.data['equip'])):
-                if a - 1 != i:
-                    if 'dm' in con.hero.data['equip'][a - 1][-2]:
-                        if 'dm' in con.hero.data['equip'][i][-2] and con.hero.data['equip'][i][-1] == 'Да':
-                            con.hero.data['equip'][i][-1] = 'Нет'
-                    else:
-                        if 'df' in con.hero.data['equip'][i][-2] and con.hero.data['equip'][i][-1] == 'Да':
-                            con.hero.data['equip'][i][-1] = 'Нет'
-
+            if con.hero.data['equip'][a - 1][1] <= con.hero.data['lvl']:
+                con.hero.data['equip'][a - 1][-1] = 'Да'
+                for i in range(len(con.hero.data['equip'])):
+                    if a - 1 != i:
+                        if 'dm' in con.hero.data['equip'][a - 1][-2]:
+                            if 'dm' in con.hero.data['equip'][i][-2] and con.hero.data['equip'][i][-1] == 'Да':
+                                con.hero.data['equip'][i][-1] = 'Нет'
+                        else:
+                            if 'df' in con.hero.data['equip'][i][-2] and con.hero.data['equip'][i][-1] == 'Да':
+                                con.hero.data['equip'][i][-1] = 'Нет'
         con.hero.total_dm = con.hero.data['characteristics']['Damage']
         con.hero.total_df = con.hero.data['characteristics']['Armor']
         for i in range(len(con.hero.data['equip'])):
@@ -310,8 +313,180 @@ def init_hero(name):
     co.close()
 
 
-#@con.app.route('/map')
-#def map():
+def fight_parser(file, elements_to_put):
+    with open(os.path.abspath('static/events/' + file), 'r', encoding='UTF-8') as file:
+        event_form = file.read().split('|')
+        for elem in event_form:
+            if elem in elements_to_put:
+                event_form[event_form.index(elem)] = str(elements_to_put[elem])
+        return (''.join(event_form))
+
+
+def fight_validator(data):
+    if data['status'] == 'processing':
+        return (fight_parser('monster_base_fight.txt', data))
+    elif data['status'] == 'victory':
+        con.hero.data['in_battle'] = False
+        return (fight_parser('monster_base_win.txt', data))
+    elif data['status'] == 'lose':
+        con.hero.fight = False
+        return (fight_parser('monster_base_lose.txt', data))
+
+
+@con.app.route('/atkscr')
+def atk_screen(data=None):
+    if con.hero.name is None:
+        return redirect('/log_in')
+    if data is None:
+        with open(os.path.abspath('static/events/monster_still_fight.txt'), 'r', encoding='UTF-8') as template:
+            return (template.read())
+    else:
+        return data
+
+
+# Нужно создать три таких - по одной на каждую локацию.
+# WORK IN PROGRESS
+@con.app.route('/forest')
+def location_forest_trip(atributes=None):
+    if con.hero.name is None:
+        return redirect('/log_in')
+    fight = con.hero.data['in_battle']
+    if fight is not True and atributes is None:
+        title = 'Dark Forest'
+        event_text = location_forest.next_event()['text']
+    else:
+        title = 'Dark Fight'
+        event_text = atk_screen(atributes)
+    return render_template('forest.html', event_text=event_text, title=title, fight=con.hero.data['in_battle'],
+                           my_hp=con.hero.data['c_hp'], mon_hp=con.hero.data['m_hp'])
+
+
+@con.app.route('/drink_hp')
+def healpot():
+    if con.hero.data['invent'].count('хилка') > 0:
+        con.hero.data['invent'].pop(con.hero.data['invent'].index('хилка'))
+        con.hero.data['c_hp'] += 5 * con.hero.data['lvl']
+        con.check_player_stats()
+    return redirect('/forest')
+
+
+@con.app.route('/atk')
+def attk():
+    if con.hero.name is None:
+        return redirect('/log_in')
+    try:
+        return location_forest_trip(fight_validator(attack(True)))
+    except Exception:
+        return redirect('/forest')
+
+
+@con.app.route('/defence')
+def defence():
+    if con.hero.name is None:
+        return redirect('/log_in')
+    try:
+        return location_forest_trip(fight_validator(attack(False)))
+    except Exception:
+        return redirect('/forest')
+
+
+@con.app.route('/fields')
+def location_fields_trip(atributes=None):
+    if con.hero.name is None:
+        return redirect('/log_in')
+    fight = con.hero.data['in_battle']
+    if fight is not True and atributes is None:
+        title = 'Dark Field'
+        event_text = location_forest.next_event()['text']
+    else:
+        title = 'Dark Fight'
+        event_text = atk_screen(atributes)
+    return render_template('field.html', event_text=event_text, title=title, fight=con.hero.data['in_battle'],
+                           my_hp=con.hero.data['c_hp'], mon_hp=con.hero.data['m_hp'])
+
+
+@con.app.route('/fdrink_hp')
+def fhealpot():
+    if con.hero.data['invent'].count('хилка') > 0:
+        con.hero.data['invent'].pop(con.hero.data['invent'].index('хилка'))
+        con.hero.data['c_hp'] += 5 * con.hero.data['lvl']
+        con.check_player_stats()
+    return redirect('/forest')
+
+
+@con.app.route('/fatk')
+def fattk():
+    if con.hero.name is None:
+        return redirect('/log_in')
+    try:
+        return location_forest_trip(fight_validator(attack(True)))
+    except Exception:
+        return redirect('/forest')
+
+
+@con.app.route('/fdefence')
+def fdefence():
+    if con.hero.name is None:
+        return redirect('/log_in')
+    try:
+        return location_forest_trip(fight_validator(attack(False)))
+    except Exception:
+        return redirect('/forest')
+
+
+@con.app.route('/caves')
+def location_caves_trip(atributes=None):
+    if con.hero.name is None:
+        return redirect('/log_in')
+    fight = con.hero.data['in_battle']
+    if fight is not True and atributes is None:
+        title = 'Dark Caves'
+        event_text = location_forest.next_event()['text']
+    else:
+        title = 'Dark Fight'
+        event_text = atk_screen(atributes)
+    return render_template('cave.html', event_text=event_text, title=title, fight=con.hero.data['in_battle'],
+                           my_hp=con.hero.data['c_hp'], mon_hp=con.hero.data['m_hp'])
+
+
+@con.app.route('/cdrink_hp')
+def chealpot():
+    if con.hero.data['invent'].count('хилка') > 0:
+        con.hero.data['invent'].pop(con.hero.data['invent'].index('хилка'))
+        con.hero.data['c_hp'] += 5 * con.hero.data['lvl']
+        con.check_player_stats()
+    return redirect('/forest')
+
+
+@con.app.route('/catk')
+def cattk():
+    if con.hero.name is None:
+        return redirect('/log_in')
+    try:
+        return location_forest_trip(fight_validator(attack(True)))
+    except Exception:
+        return redirect('/forest')
+
+
+@con.app.route('/cdefence')
+def cdefence():
+    if con.hero.name is None:
+        return redirect('/log_in')
+    try:
+        return location_forest_trip(fight_validator(attack(False)))
+    except Exception:
+        return redirect('/forest')
+
+
+@con.app.route('/global_map')
+def global_map():
+    if con.hero.name is None:
+        return redirect('/log_in')
+    return render_template('map.html')
+
+
+# @con.app.route('/map')
+# def map():
 #    return render_template('map.html')
 
 
