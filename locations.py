@@ -997,9 +997,8 @@ Waterfall = Event(form=os.path.abspath('static/events/waterfall.txt'),
 # Объявление локации
 location_forest = Location([Rat, Big_rat, Fire_rat, Opa, Small_Supoed, Satanuga, Supoed, Big_Supoed, Dart_smesharus,
                             Sharik], [Waterfall])
-
-# DarkQuest/location/monstr/to_do
-
-# Hero
-# id_monstr
-# hp mostr
+location_caves = Location([Demonic_kashevar_1, Demonic_kashevar_2, Demonic_kashevar_3,
+                           Demonic_kashevar_4, Demonic_kashevar_5, Cultist_1, Cultist_2,
+                           Cultist_3, Cultist_4, Cultist_5, Lich_1, Lich_2, Lich_3, Strange_thing_1,
+                           Strange_thing_2, Strange_thing_3, Strange_thing_4] * 10 + [Boss], [Waterfall])
+location_fields = Location([Mouse, Rat, Rat, Volf, Volf, Volf, Volf, Fox, Fox, Fox, Rob, Necr], [Waterfall])

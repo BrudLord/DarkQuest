@@ -6,7 +6,7 @@ from work_with_db import db_session
 from forms.user import RegisterForm, LoginForm
 from work_with_db.Users import User
 from flask_login import LoginManager, login_user
-from locations import location_forest, attack
+from locations import location_forest, location_caves, location_fields, attack
 
 
 con.app = Flask(__name__)
