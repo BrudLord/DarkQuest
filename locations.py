@@ -135,7 +135,7 @@ def attack(is_attack_postion):
             return player_opponent.victory()
 
 
-# Объявление монтра
+# Объявление монтров полей
 class Rat(Monster):
     def __init__(self):
         self.name = 'Small rat'
@@ -161,9 +161,19 @@ class Rat(Monster):
                  'money': -3})
 
 
-# Объявление эвента
+# Объявление монтров пещер
+
+
+# Объявление монтров леса
+
+
+# Объявление эвентов лесов
 Waterfall = Event(form=os.path.abspath('static/events/waterfall.txt'),
                   properties={'hp': 10})
+# Объявление эвентов полей
+
+# Объявление эвентов пещер
+
 # Объявление локации
 location_forest = Location([Rat], [Waterfall])
 location_caves = Location([Rat], [Waterfall])
