@@ -6,7 +6,8 @@ from work_with_db import db_session
 from forms.user import RegisterForm, LoginForm
 from work_with_db.Users import User
 from flask_login import LoginManager, login_user
-from locations import location_forest, attack, m_properties
+from locations import location_forest, location_caves, location_fields, attack
+
 
 con.app = Flask(__name__)
 con.app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -397,7 +398,7 @@ def location_fields_trip(atributes=None):
     fight = con.hero.data['in_battle']
     if fight is not True and atributes is None:
         title = 'Dark Field'
-        event_text = location_forest.next_event()['text']
+        event_text = location_fields.next_event()['text']
     else:
         title = 'Dark Fight'
         event_text = atk_screen(atributes)
@@ -411,7 +412,7 @@ def fhealpot():
         con.hero.data['invent'].pop(con.hero.data['invent'].index('хилка'))
         con.hero.data['c_hp'] += 5 * con.hero.data['lvl']
         con.check_player_stats()
-    return redirect('/forest')
+    return redirect('/fields')
 
 
 @con.app.route('/fatk')
@@ -419,9 +420,9 @@ def fattk():
     if con.hero.name is None:
         return redirect('/log_in')
     try:
-        return location_forest_trip(fight_validator(attack(True)))
+        return location_fields_trip(fight_validator(attack(True)))
     except Exception:
-        return redirect('/forest')
+        return redirect('/fields')
 
 
 @con.app.route('/fdefence')
@@ -429,9 +430,9 @@ def fdefence():
     if con.hero.name is None:
         return redirect('/log_in')
     try:
-        return location_forest_trip(fight_validator(attack(False)))
+        return location_fields_trip(fight_validator(attack(False)))
     except Exception:
-        return redirect('/forest')
+        return redirect('/fields')
 
 
 @con.app.route('/caves')
@@ -441,11 +442,11 @@ def location_caves_trip(atributes=None):
     fight = con.hero.data['in_battle']
     if fight is not True and atributes is None:
         title = 'Dark Caves'
-        event_text = location_forest.next_event()['text']
+        event_text = location_caves.next_event()['text']
     else:
         title = 'Dark Fight'
         event_text = atk_screen(atributes)
-    return render_template('cave.html', event_text=event_text, title=title, fight=con.hero.data['in_battle'],
+    return render_template('caves.html', event_text=event_text, title=title, fight=con.hero.data['in_battle'],
                            my_hp=con.hero.data['c_hp'], mon_hp=con.hero.data['m_hp'])
 
 
@@ -455,7 +456,7 @@ def chealpot():
         con.hero.data['invent'].pop(con.hero.data['invent'].index('хилка'))
         con.hero.data['c_hp'] += 5 * con.hero.data['lvl']
         con.check_player_stats()
-    return redirect('/forest')
+    return redirect('/caves')
 
 
 @con.app.route('/catk')
@@ -463,9 +464,9 @@ def cattk():
     if con.hero.name is None:
         return redirect('/log_in')
     try:
-        return location_forest_trip(fight_validator(attack(True)))
+        return location_caves_trip(fight_validator(attack(True)))
     except Exception:
-        return redirect('/forest')
+        return redirect('/caves')
 
 
 @con.app.route('/cdefence')
@@ -473,9 +474,9 @@ def cdefence():
     if con.hero.name is None:
         return redirect('/log_in')
     try:
-        return location_forest_trip(fight_validator(attack(False)))
+        return location_caves_trip(fight_validator(attack(False)))
     except Exception:
-        return redirect('/forest')
+        return redirect('/caves')
 
 
 @con.app.route('/global_map')
@@ -490,9 +491,6 @@ def run_away():
         return redirect('/log_in')
     con.hero.data['in_battle'] = False
     return redirect('/main_menu')
-# @con.app.route('/map')
-# def map():
-#    return render_template('map.html')
 
 
 if __name__ == '__main__':
