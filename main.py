@@ -484,7 +484,12 @@ def global_map():
         return redirect('/log_in')
     return render_template('map.html')
 
-
+@con.app.route('/run_away')
+def run_away():
+    if con.hero.name is None:
+        return redirect('/log_in')
+    con.hero.data['in_battle'] = False
+    return redirect('/main_menu')
 # @con.app.route('/map')
 # def map():
 #    return render_template('map.html')

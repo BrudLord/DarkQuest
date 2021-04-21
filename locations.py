@@ -44,6 +44,8 @@ class Location:
             player_opponent = current_event()
             global m_properties
             m_properties = player_opponent.info()
+            if con.hero.data['lvl'] <= 5 and con.hero.data['lvl'] < m_properties['lvl']:
+                return self.next_event()
             con.hero.data['m_hp'] = m_properties['hp']
             with open(os.path.abspath('static/events/monster_preview.txt'), 'r', encoding='UTF-8') as file:
                 event_form = file.read().split('|')
@@ -95,8 +97,8 @@ def attack(is_attack_postion):
                     m_properties['hp'] -= con.hero.total_dm - m_properties['defence']
                 else:
                     m_properties['hp'] -= int(con.hero.total_dm * 0.01) + 1
-                if m_properties['atk'] < con.hero.total_df:
-                    con.hero.data['c_hp'] -= m_properties['atk'] - con.hero.total_df
+                if m_properties['atk'] > con.hero.total_df:
+                    con.hero.data['c_hp'] -= (m_properties['atk'] - con.hero.total_df)
                 else:
                     con.hero.data['c_hp'] -= int(m_properties['atk'] * 0.01) + 1
             else:
@@ -105,8 +107,8 @@ def attack(is_attack_postion):
                         'defence']
                 else:
                     m_properties['hp'] -= 1
-                if m_properties['atk'] < int(con.hero.total_df * 1.5):
-                    con.hero.data['c_hp'] -= m_properties['atk'] - con.hero.total_df
+                if m_properties['atk'] > int(con.hero.total_df * 1.5):
+                    con.hero.data['c_hp'] -= (m_properties['atk'] - con.hero.total_df)
                 else:
                     con.hero.data['c_hp'] -= 1
             delta_monster_hp = monster_hp_before - m_properties['hp']
@@ -152,7 +154,27 @@ class Event:
 
 # Объявление эвента
 Waterfall = Event(form=os.path.abspath('static/events/waterfall.txt'),
-                  properties={'hp': 10})
+                  properties={'hp': 10 * con.hero.data['lvl']})
+Backpack = Event(form=os.path.abspath('static/events/backpack.txt'),
+                 properties={'money': -5 * con.hero.data['lvl']})
+ChickenFight_win = Event(form=os.path.abspath('static/events/chickenfight_win.txt'),
+                         properties={'money': randint(185, 215)})
+ChickenFight_lose = Event(form=os.path.abspath('static/events/chickenfight_lose.txt'),
+                          properties={'money': -randint(125, 156)})
+ChickenFight_neutral = Event(form=os.path.abspath('static/events/chickenfight_neutral.txt'),
+                             properties={'dm': 1})
+Farmer = Event(form=os.path.abspath('static/events/farmer.txt'),
+               properties={'hp': 5 * con.hero.data['lvl']})
+ForestTraining = Event(form=os.path.abspath('static/events/forest_training.txt'),
+                       properties={'HealPoints': 5 * (con.hero.data['invent'].count('манка') // 15),
+                                   'dm': (con.hero.data['invent'].count('манка') // 15),
+                                   'arm': (con.hero.data['invent'].count('манка') // 15)})
+GoblinEvent = Event(form=os.path.abspath('static/events/goblin.txt'),
+                    properties={'money': -10 * con.hero.data['lvl']})
+Graveyard = Event(form=os.path.abspath('static/events/goblin.txt'),
+                  properties={'money': (-100 // con.hero.data['lvl'])})
+KnightEvent = Event(form=os.path.abspath('static/events/goblin.txt'), properties={})
+
 # Объявление локации
 location_forest = Location([Rat], [Waterfall])
 
