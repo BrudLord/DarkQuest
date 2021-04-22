@@ -83,7 +83,6 @@ class Location:
         self.events = events
         self.all_options = [self.monsters, self.events]
 
-
     def next_event(self):
         global player_opponent
         current_event = choice(choice(self.all_options))
@@ -93,7 +92,7 @@ class Location:
             global m_properties
             m_properties = player_opponent.info()
             while con.hero.data['lvl'] <= 5 and con.hero.data['lvl'] < m_properties['lvl']:
-                player_opponent = choice[self.monsters]
+                player_opponent = choice(self.monsters)()
                 m_properties = player_opponent.info()
             con.hero.data['m_hp'] = m_properties['hp']
             with open(os.path.abspath('static/events/monster_preview.txt'), 'r', encoding='UTF-8') as file:
@@ -105,34 +104,10 @@ class Location:
                          'stats': m_properties})
 
         else:
-            return (current_event.execute())
+            return current_event.execute()
 
 
 # Объявление монтра
-class Rat(Monster):
-    def __init__(self):
-        self.name = 'Small rat'
-        self.lvl = 1
-        self.atk = 4
-        self.defence = 1
-        self.hp = 10
-
-    def victory(self):
-        con.hero.data['money'] += 3
-        con.hero.data['exp'] += 150
-        con.check_player_stats()
-        return ({'status': 'victory',
-                 'exp': 15,
-                 'money': 3})
-
-    def lose(self):
-        con.hero.data['money'] -= 3
-        con.hero.data['c_hp'] = 15
-        con.check_player_stats()
-        con.hero.data['in_battle'] = False
-        return ({'status': 'lose',
-                 'money': -3})
-
 
 def attack(is_attack_postion):
     global m_properties
@@ -1099,9 +1074,9 @@ Graveyard = Event(form=os.path.abspath('static/events/goblin.txt'),
 KnightEvent = Event(form=os.path.abspath('static/events/goblin.txt'), properties={})
 
 # Объявление локации
-location_forest = Location([Rat, Bigrat, Firerat, Opa, SmallSupoed, Satanuga, Supoed, BigSupoed, Dartsmesharus,
+location_forest = Location([Mouse, Rat, Bigrat, Firerat, Opa, SmallSupoed, Satanuga, Supoed, BigSupoed, Dartsmesharus,
                             Sharik], [Waterfall, Graveyard, ForestTraining])
-location_caves = Location([Demonickashevar1, Demonickashevar2, Demonickashevar3,
+location_caves = Location([Mouse, Demonickashevar1, Demonickashevar2, Demonickashevar3,
                            Demonickashevar4, Demonickashevar5, Cultist1, Cultist2,
                            Cultist3, Cultist4, Cultist5, Lich1, Lich2, Lich3, Strangething1,
                            Strangething2, Strangething3, Strangething4] * 10 + [Boss], [Waterfall, GoblinEvent])

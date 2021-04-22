@@ -54,19 +54,19 @@ def registration():
                                    form=form,
                                    message="Такой пользователь уже есть")
         sl = {
-            'lvl': 15,
-            'money': 10000,
+            'lvl': 1,
+            'money': 15,
             'in_battle': False,
             'exp': 0,
-            'c_hp': 375,
+            'c_hp': 25,
             'm_hp': 0,
             'cur_loc': None,
             'equip': [],
             'invent': [],
             'characteristics': {
-                'Damage': 20,
-                'Armor': 20,
-                'HealPoints': 375
+                'Damage': 1,
+                'Armor': 1,
+                'HealPoints': 25
             }
         }
         user = User(
@@ -150,7 +150,7 @@ def main_window():
 
 
 @con.app.route('/help')
-def help():
+def window_help():
     if con.hero.name is None:
         return redirect('/log_in')
     con.refresh_db()
@@ -166,7 +166,7 @@ def settings():
 
 
 @con.app.route('/map')
-def map():
+def town_map():
     if con.hero.name is None:
         return redirect('/log_in')
     con.refresh_db()
@@ -191,7 +191,7 @@ def tranzit(item):
         if int(con.hero.data['money']) > 1:
             con.hero.data['invent'].append(item)
             con.hero.data['money'] -= 1
-            resulte = cur.execute('''UPDATE users
+            cur.execute('''UPDATE users
             SET data = ? 
             WHERE name = ?''', (str(con.hero.data), con.hero.name,))
             co.commit()
@@ -383,7 +383,7 @@ def location_forest_trip(atributes=None):
 
 @con.app.route('/drink_hp')
 def healpot():
-    if con.hero.data['invent'].count('хилка') > 0 and con.hero.data['in_battle'] and\
+    if con.hero.data['invent'].count('хилка') > 0 and con.hero.data['in_battle'] and \
             con.hero.data['cur_loc'] == 'forest':
         con.hero.data['invent'].pop(con.hero.data['invent'].index('хилка'))
         con.hero.data['c_hp'] += 5 * con.hero.data['lvl']
@@ -435,7 +435,7 @@ def location_fields_trip(atributes=None):
 
 @con.app.route('/fdrink_hp')
 def fhealpot():
-    if con.hero.data['invent'].count('хилка') > 0 and con.hero.data['cur_loc'] == 'fields' and\
+    if con.hero.data['invent'].count('хилка') > 0 and con.hero.data['cur_loc'] == 'fields' and \
             con.hero.data['in_battle']:
         con.hero.data['invent'].pop(con.hero.data['invent'].index('хилка'))
         con.hero.data['c_hp'] += 5 * con.hero.data['lvl']

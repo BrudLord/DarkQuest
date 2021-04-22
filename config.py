@@ -31,7 +31,7 @@ def check_player_stats():
 def refresh_db():
     co = sqlite3.connect('db/base.sqlite')
     cur = co.cursor()
-    resulte = cur.execute('''UPDATE users
+    cur.execute('''UPDATE users
         SET data = ? 
         WHERE name = ?''', (str(hero.data), hero.name,))
     co.commit()
