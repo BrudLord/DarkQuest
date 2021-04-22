@@ -8,8 +8,6 @@ from work_with_db.Users import User
 from flask_login import LoginManager, login_user
 from locations import location_forest, location_caves, location_fields, attack
 
-
-
 con.app = Flask(__name__)
 con.app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
@@ -56,18 +54,18 @@ def registration():
                                    form=form,
                                    message="Такой пользователь уже есть")
         sl = {
-            'lvl': 1,
+            'lvl': 15,
             'money': 10000,
             'in_battle': False,
             'exp': 0,
-            'c_hp': 25,
+            'c_hp': 375,
             'm_hp': 0,
             'equip': [],
             'invent': [],
             'characteristics': {
-                'Damage': 1,
-                'Armor': 1,
-                'HealPoints': 25
+                'Damage': 20,
+                'Armor': 20,
+                'HealPoints': 375
             }
         }
         user = User(
@@ -107,6 +105,7 @@ def inventar():
                        ['Зелье маны', str(con.hero.data['invent'].count('манка'))]]
         },
     }
+    con.refresh_db()
     return render_template('inventar.html', title='DarkQuest', tables=tables, level=con.hero.data['lvl'])
 
 
@@ -137,6 +136,7 @@ def invent(a):
                     con.hero.total_df += int(con.hero.data['equip'][i][-2].split()[0])
                 else:
                     con.hero.total_dm += int(con.hero.data['equip'][i][-2].split()[0])
+    con.refresh_db()
     return redirect('/inventar')
 
 
@@ -144,6 +144,7 @@ def invent(a):
 def main_window():
     if con.hero.name is None:
         return redirect('/log_in')
+    con.refresh_db()
     return render_template('test.html')
 
 
@@ -151,6 +152,7 @@ def main_window():
 def help():
     if con.hero.name is None:
         return redirect('/log_in')
+    con.refresh_db()
     return render_template('help.html')
 
 
@@ -158,6 +160,7 @@ def help():
 def settings():
     if con.hero.name is None:
         return redirect('/log_in')
+    con.refresh_db()
     return render_template('Settings.html')
 
 
@@ -165,6 +168,7 @@ def settings():
 def map():
     if con.hero.name is None:
         return redirect('/log_in')
+    con.refresh_db()
     return render_template('Dark Quest.html')
 
 
@@ -172,6 +176,7 @@ def map():
 def no():
     if con.hero.name is None:
         return redirect('/log_in')
+    con.refresh_db()
     return render_template('no_money.html')
 
 
@@ -244,6 +249,7 @@ def tranzit_gear(item):
 def choice():
     if con.hero.name is None:
         return redirect('/log_in')
+    con.refresh_db()
     return render_template('choice.html')
 
 
@@ -252,6 +258,7 @@ def buy_armor():
     if con.hero.name is None:
         return redirect('/log_in')
     item = request.form['test']
+    con.refresh_db()
     return tranzit_armor(item)
 
 
@@ -259,6 +266,7 @@ def buy_armor():
 def choice1():
     if con.hero.name is None:
         return redirect('/log_in')
+    con.refresh_db()
     return render_template('choice1.html')
 
 
@@ -267,6 +275,7 @@ def buy_gear():
     if con.hero.name is None:
         return redirect('/log_in')
     item = request.form['test2']
+    con.refresh_db()
     return tranzit_gear(item)
 
 
@@ -281,6 +290,7 @@ def show_cost_armor():
     result = cur.execute('''SELECT * FROM Armor WHERE name = ?''', (item,)).fetchone()
     print(result)
     '''сюда надо запихнуть покозатель денег игрока ---->'''
+    con.refresh_db()
     return render_template('success.html', item=item, full=result)
 
 
@@ -295,6 +305,7 @@ def show_cost_gear():
     result = cur.execute('''SELECT * FROM Weapons WHERE name = ?''', (item,)).fetchone()
     print(result)
     '''сюда надо запихнуть покозатель денег игрока ---->'''
+    con.refresh_db()
     return render_template('success2.html', item=item, full=result)
 
 
@@ -313,6 +324,7 @@ def init_hero(name):
             else:
                 con.hero.total_dm += int(con.hero.data['equip'][i][-2].split()[0])
     co.close()
+    con.refresh_db()
 
 
 def fight_parser(file, elements_to_put):
@@ -321,6 +333,7 @@ def fight_parser(file, elements_to_put):
         for elem in event_form:
             if elem in elements_to_put:
                 event_form[event_form.index(elem)] = str(elements_to_put[elem])
+        con.refresh_db()
         return (''.join(event_form))
 
 
@@ -331,7 +344,7 @@ def fight_validator(data):
         con.hero.data['in_battle'] = False
         return (fight_parser('monster_base_win.txt', data))
     elif data['status'] == 'lose':
-        con.hero.fight = False
+        con.hero.data['in_battle'] = False
         return (fight_parser('monster_base_lose.txt', data))
 
 
@@ -359,6 +372,7 @@ def location_forest_trip(atributes=None):
     else:
         title = 'Dark Fight'
         event_text = atk_screen(atributes)
+    con.refresh_db()
     return render_template('forest.html', event_text=event_text, title=title, fight=con.hero.data['in_battle'],
                            my_hp=con.hero.data['c_hp'], mon_hp=con.hero.data['m_hp'])
 
@@ -369,6 +383,7 @@ def healpot():
         con.hero.data['invent'].pop(con.hero.data['invent'].index('хилка'))
         con.hero.data['c_hp'] += 5 * con.hero.data['lvl']
         con.check_player_stats()
+    con.refresh_db()
     return redirect('/forest')
 
 
@@ -377,6 +392,7 @@ def attk():
     if con.hero.name is None:
         return redirect('/log_in')
     try:
+        con.refresh_db()
         return location_forest_trip(fight_validator(attack(True)))
     except Exception:
         return redirect('/forest')
@@ -387,6 +403,7 @@ def defence():
     if con.hero.name is None:
         return redirect('/log_in')
     try:
+        con.refresh_db()
         return location_forest_trip(fight_validator(attack(False)))
     except Exception:
         return redirect('/forest')
@@ -403,6 +420,7 @@ def location_fields_trip(atributes=None):
     else:
         title = 'Dark Fight'
         event_text = atk_screen(atributes)
+    con.refresh_db()
     return render_template('field.html', event_text=event_text, title=title, fight=con.hero.data['in_battle'],
                            my_hp=con.hero.data['c_hp'], mon_hp=con.hero.data['m_hp'])
 
@@ -413,6 +431,7 @@ def fhealpot():
         con.hero.data['invent'].pop(con.hero.data['invent'].index('хилка'))
         con.hero.data['c_hp'] += 5 * con.hero.data['lvl']
         con.check_player_stats()
+    con.refresh_db()
     return redirect('/fields')
 
 
@@ -421,6 +440,7 @@ def fattk():
     if con.hero.name is None:
         return redirect('/log_in')
     try:
+        con.refresh_db()
         return location_fields_trip(fight_validator(attack(True)))
     except Exception:
         return redirect('/fields')
@@ -431,6 +451,7 @@ def fdefence():
     if con.hero.name is None:
         return redirect('/log_in')
     try:
+        con.refresh_db()
         return location_fields_trip(fight_validator(attack(False)))
     except Exception:
         return redirect('/fields')
@@ -447,6 +468,7 @@ def location_caves_trip(atributes=None):
     else:
         title = 'Dark Fight'
         event_text = atk_screen(atributes)
+    con.refresh_db()
     return render_template('caves.html', event_text=event_text, title=title, fight=con.hero.data['in_battle'],
                            my_hp=con.hero.data['c_hp'], mon_hp=con.hero.data['m_hp'])
 
@@ -457,6 +479,7 @@ def chealpot():
         con.hero.data['invent'].pop(con.hero.data['invent'].index('хилка'))
         con.hero.data['c_hp'] += 5 * con.hero.data['lvl']
         con.check_player_stats()
+    con.refresh_db()
     return redirect('/caves')
 
 
@@ -465,6 +488,7 @@ def cattk():
     if con.hero.name is None:
         return redirect('/log_in')
     try:
+        con.refresh_db()
         return location_caves_trip(fight_validator(attack(True)))
     except Exception:
         return redirect('/caves')
@@ -475,6 +499,7 @@ def cdefence():
     if con.hero.name is None:
         return redirect('/log_in')
     try:
+        con.refresh_db()
         return location_caves_trip(fight_validator(attack(False)))
     except Exception:
         return redirect('/caves')
@@ -484,14 +509,17 @@ def cdefence():
 def global_map():
     if con.hero.name is None:
         return redirect('/log_in')
+    con.refresh_db()
     return render_template('map.html')
+
 
 @con.app.route('/run_away')
 def run_away():
     if con.hero.name is None:
         return redirect('/log_in')
     con.hero.data['in_battle'] = False
-    return redirect('/main_menu')
+    con.refresh_db()
+    return redirect('/main_window')
 
 
 if __name__ == '__main__':

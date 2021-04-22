@@ -31,27 +31,28 @@ class Monster:
 
 
 class Event:
-    def __init__(self, form='', properties={}):
+    def __init__(self, form='', properties={}, refreshable_properties={}):
         self.form = form
-        self.properties = {'hp': 0,
+        self.properties = {'Manka': True,
+                           'hp': 0,
                            'lvl': 0,
                            'HealPoints': 0,
                            'arm': 0,
                            'dm': 0,
                            'money': 0,
                            'exp': 0}
+        self.refreshable_properties = refreshable_properties
         for elem in properties:
             self.properties[elem] = properties[elem]
 
     def execute(self):
         try:
+            self.stats_refresh()
             with open(self.form, 'r', encoding='UTF-8') as file:
                 event_form = file.read().split('|')
-                print(0)
                 for elem in event_form:
                     if elem in self.properties:
                         event_form[event_form.index(elem)] = str(self.properties[elem])
-                print(1)
                 con.hero.data['c_hp'] += self.properties['hp']
                 con.hero.data['money'] += self.properties['money']
                 con.hero.data['characteristics']['Damage'] += self.properties['dm']
@@ -59,13 +60,21 @@ class Event:
                 con.hero.data['characteristics']['HealPoints'] += self.properties['HealPoints']
                 con.hero.data['exp'] += self.properties['exp']
                 con.hero.data['lvl'] += self.properties['lvl']
-                print(1.5)
+                if self.properties['Manka'] is not True:
+                    while con.hero.data['invent'].count('манка') > 0:
+                        con.hero.data['invent'].pop(con.hero.data['invent'].index('манка'))
+
                 con.check_player_stats()
-                print(2)
                 return ({'text': ''.join(event_form),
                          'stats': self.properties})
         except Exception:
             return ({'text': 'Error with file "' + self.form + '".'})
+
+    def stats_refresh(self):
+        for elem in self.refreshable_properties:
+            if elem in self.properties:
+                self.properties[elem] = eval(
+                    self.refreshable_properties[elem].replace("con.hero.data['lvl']", str(con.hero.data['lvl'])))
 
 
 class Location:
@@ -172,6 +181,7 @@ def attack(is_attack_postion):
 # Объявление монтров полей
 class Mouse(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'полевая мышь'
         self.lvl = 1
         self.atk = 1
@@ -197,6 +207,7 @@ class Mouse(Monster):
 
 class Rat(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'маленькая крыса'
         self.lvl = 2
         self.atk = 3
@@ -220,8 +231,9 @@ class Rat(Monster):
                  'money': -3})
 
 
-class Volf(Monster):
+class Wolf(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'юный волк'
         self.lvl = 3
         self.atk = 6
@@ -247,6 +259,7 @@ class Volf(Monster):
 
 class Fox(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'юный волк'
         self.lvl = 3
         self.atk = 5
@@ -272,6 +285,7 @@ class Fox(Monster):
 
 class Rob(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'раненый разбойник'
         self.lvl = 5
         self.atk = 10
@@ -297,6 +311,7 @@ class Rob(Monster):
 
 class Mag(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'деревенский колдун'
         self.lvl = 7
         self.atk = 20
@@ -322,6 +337,7 @@ class Mag(Monster):
 
 class Necr(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'некромант-ученик'
         self.lvl = 9
         self.atk = 45
@@ -346,8 +362,9 @@ class Necr(Monster):
 
 
 # Объявление монтров пещер
-class Demonic_kashevar_1(Monster):
+class Demonickashevar1(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'юный демонический кашевар'
         self.lvl = 20
         self.atk = 150
@@ -371,8 +388,9 @@ class Demonic_kashevar_1(Monster):
                  'money': -30})
 
 
-class Demonic_kashevar_2(Monster):
+class Demonickashevar2(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'демонический кашевар'
         self.lvl = 22
         self.atk = 170
@@ -396,8 +414,9 @@ class Demonic_kashevar_2(Monster):
                  'money': -36})
 
 
-class Demonic_kashevar_3(Monster):
+class Demonickashevar3(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'опытный демонический кашевар'
         self.lvl = 24
         self.atk = 190
@@ -421,8 +440,9 @@ class Demonic_kashevar_3(Monster):
                  'money': -41})
 
 
-class Demonic_kashevar_4(Monster):
+class Demonickashevar4(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'заместитель главы демонических кашеваров'
         self.lvl = 28
         self.atk = 230
@@ -446,8 +466,9 @@ class Demonic_kashevar_4(Monster):
                  'money': -60})
 
 
-class Demonic_kashevar_5(Monster):
+class Demonickashevar5(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'глава демонических кашеваров'
         self.lvl = 34
         self.atk = 250
@@ -471,8 +492,9 @@ class Demonic_kashevar_5(Monster):
                  'money': -150})
 
 
-class Cultist_1(Monster):
+class Cultist1(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'юный культист'
         self.lvl = 23
         self.atk = 200
@@ -496,8 +518,9 @@ class Cultist_1(Monster):
                  'money': -45})
 
 
-class Cultist_2(Monster):
+class Cultist2(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'культист'
         self.lvl = 25
         self.atk = 248
@@ -521,8 +544,9 @@ class Cultist_2(Monster):
                  'money': -78})
 
 
-class Cultist_3(Monster):
+class Cultist3(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'старший культист'
         self.lvl = 29
         self.atk = 270
@@ -546,8 +570,9 @@ class Cultist_3(Monster):
                  'money': -100})
 
 
-class Cultist_4(Monster):
+class Cultist4(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'заместитель главы культистов'
         self.lvl = 33
         self.atk = 310
@@ -571,8 +596,9 @@ class Cultist_4(Monster):
                  'money': -150})
 
 
-class Cultist_5(Monster):
+class Cultist5(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'глава культистов'
         self.lvl = 40
         self.atk = 400
@@ -596,8 +622,9 @@ class Cultist_5(Monster):
                  'money': -500})
 
 
-class Lich_1(Monster):
+class Lich1(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'лич'
         self.lvl = 31
         self.atk = 310
@@ -621,8 +648,9 @@ class Lich_1(Monster):
                  'money': -95})
 
 
-class Lich_2(Monster):
+class Lich2(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'древний лич'
         self.lvl = 37
         self.atk = 450
@@ -646,8 +674,9 @@ class Lich_2(Monster):
                  'money': -177})
 
 
-class Lich_3(Monster):
+class Lich3(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'древний архилич'
         self.lvl = 50
         self.atk = 666
@@ -671,8 +700,9 @@ class Lich_3(Monster):
                  'money': -750})
 
 
-class Strange_thing_1(Monster):
+class Strangething1(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'слепая мохнолапка'
         self.lvl = 34
         self.atk = 30
@@ -696,8 +726,9 @@ class Strange_thing_1(Monster):
                  'money': -100})
 
 
-class Strange_thing_2(Monster):
+class Strangething2(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'сигмойдообразная эркуция'
         self.lvl = 37
         self.atk = 327
@@ -721,8 +752,9 @@ class Strange_thing_2(Monster):
                  'money': -150})
 
 
-class Strange_thing_3(Monster):
+class Strangething3(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'скелет-воин'
         self.lvl = 20
         self.atk = 107
@@ -746,8 +778,9 @@ class Strange_thing_3(Monster):
                  'money': -150})
 
 
-class Strange_thing_4(Monster):
+class Strangething4(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'красноглазая ложноножка'
         self.lvl = 21
         self.atk = 168
@@ -773,6 +806,7 @@ class Strange_thing_4(Monster):
 
 class Boss(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'Повелитель'
         self.lvl = 100
         self.atk = 850
@@ -797,8 +831,9 @@ class Boss(Monster):
 
 
 # Объявление монтров леса
-class Big_rat(Monster):
+class Bigrat(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'Большая крыса'
         self.lvl = 4
         self.atk = 9
@@ -822,8 +857,9 @@ class Big_rat(Monster):
                  'money': -9})
 
 
-class Fire_rat(Monster):
+class Firerat(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'Огненная крыса'
         self.lvl = 7
         self.atk = 14
@@ -849,6 +885,7 @@ class Fire_rat(Monster):
 
 class Supoed(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'Злобный супоед'
         self.lvl = 9
         self.atk = 3
@@ -873,8 +910,9 @@ class Supoed(Monster):
                  'money': -30})
 
 
-class Big_Supoed(Monster):
+class BigSupoed(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'Большой Злобный Супоед'
         self.lvl = 10
         self.atk = 16
@@ -899,8 +937,9 @@ class Big_Supoed(Monster):
                  'money': -30})
 
 
-class Small_Supoed(Monster):
+class SmallSupoed(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'Маленький Здобный Супоед'
         self.lvl = 7
         self.atk = 6
@@ -927,6 +966,7 @@ class Small_Supoed(Monster):
 
 class Opa(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'Рыцарь с К.У.К.У.Р.У.З.О.Й.'
         self.lvl = 20
         self.atk = 140
@@ -952,6 +992,7 @@ class Opa(Monster):
 
 class Sharik(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'Смешарик с бинзопелой'
         self.lvl = 17
         self.atk = 90
@@ -975,8 +1016,9 @@ class Sharik(Monster):
                  'money': -300})
 
 
-class Dart_smesharus(Monster):
+class Dartsmesharus(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'Дарт смешарус'
         self.lvl = 20
         self.atk = 78
@@ -1002,6 +1044,7 @@ class Dart_smesharus(Monster):
 
 class Satanuga(Monster):
     def __init__(self):
+        super().__init__()
         self.name = 'АЦЦЦкий Сатанюга666'
         self.lvl = 21
         self.atk = 90
@@ -1043,10 +1086,11 @@ ChickenFight_neutral = Event(form=os.path.abspath('static/events/chickenfight_ne
                              properties={'dm': 1, 'HealPoints': -1})
 Farmer = Event(form=os.path.abspath('static/events/farmer.txt'),
                properties={'hp': 25, 'money': -2})
-#ForestTraining = Event(form=os.path.abspath('static/events/forest_training.txt'),
-#                       properties={'HealPoints': 5 * (con.hero.data['invent'].count('манка') // 15),
-#                                   'dm': (con.hero.data['invent'].count('манка') // 15),
-#                                   'arm': (con.hero.data['invent'].count('манка') // 15)})
+ForestTraining = Event(form=os.path.abspath('static/events/forest_training.txt'),
+                       refreshable_properties={'HealPoints': "5 * (con.hero.data['invent'].count('манка') // 15)",
+                                               'dm': "(con.hero.data['invent'].count('манка') // 15)",
+                                               'arm': "(con.hero.data['invent'].count('манка') // 15)"},
+                       properties={'Manka': False})
 GoblinEvent = Event(form=os.path.abspath('static/events/goblin.txt'),
                     properties={'money': -10})
 Graveyard = Event(form=os.path.abspath('static/events/goblin.txt'),
@@ -1054,12 +1098,12 @@ Graveyard = Event(form=os.path.abspath('static/events/goblin.txt'),
 KnightEvent = Event(form=os.path.abspath('static/events/goblin.txt'), properties={})
 
 # Объявление локации
-location_forest = Location([Rat, Big_rat, Fire_rat, Opa, Small_Supoed, Satanuga, Supoed, Big_Supoed, Dart_smesharus,
-                            Sharik], [Waterfall, Graveyard])
-location_caves = Location([Demonic_kashevar_1, Demonic_kashevar_2, Demonic_kashevar_3,
-                           Demonic_kashevar_4, Demonic_kashevar_5, Cultist_1, Cultist_2,
-                           Cultist_3, Cultist_4, Cultist_5, Lich_1, Lich_2, Lich_3, Strange_thing_1,
-                           Strange_thing_2, Strange_thing_3, Strange_thing_4] * 10 + [Boss], [Waterfall, GoblinEvent])
-location_fields = Location([Mouse, Rat, Rat, Volf, Volf, Volf, Volf, Fox, Fox, Fox, Rob, Necr],
+location_forest = Location([Rat, Bigrat, Firerat, Opa, SmallSupoed, Satanuga, Supoed, BigSupoed, Dartsmesharus,
+                            Sharik], [Waterfall, Graveyard, ForestTraining])
+location_caves = Location([Demonickashevar1, Demonickashevar2, Demonickashevar3,
+                           Demonickashevar4, Demonickashevar5, Cultist1, Cultist2,
+                           Cultist3, Cultist4, Cultist5, Lich1, Lich2, Lich3, Strangething1,
+                           Strangething2, Strangething3, Strangething4] * 10 + [Boss], [Waterfall, GoblinEvent])
+location_fields = Location([Mouse, Rat, Rat, Wolf, Wolf, Wolf, Wolf, Fox, Fox, Fox, Rob, Necr],
                            [Farmer, ChickenFight_lose, ChickenFight_neutral, ChickenFight_win, Backpack,
                             KnightEvent])
