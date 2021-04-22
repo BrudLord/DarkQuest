@@ -1,5 +1,3 @@
 Вы обнаружили водопад. Попив воды, вы чувствуете,
 как к Вам приходят сиплы.
-You discovered the waterall. After drinking water,
-you are feeling that you have more energy.
-+|c_hp| HP
++|hp| HP

@@ -14,6 +14,8 @@ def check_player_stats():
         hero.data['characteristics']['Damage'] += 1
         hero.data['characteristics']['Armor'] += 1
         hero.data['characteristics']['HealPoints'] += 25
+        hero.total_dm += 1
+        hero.total_df += 1
         co = sqlite3.connect('db/base.sqlite')
         cur = co.cursor()
         resulte = cur.execute('''UPDATE users
@@ -24,3 +26,12 @@ def check_player_stats():
         hero.data['c_hp'] = hero.data['characteristics']['HealPoints']
     if hero.data['money'] < 0:
         hero.data['money'] = 0
+
+
+def refresh_db():
+    co = sqlite3.connect('db/base.sqlite')
+    cur = co.cursor()
+    resulte = cur.execute('''UPDATE users
+        SET data = ? 
+        WHERE name = ?''', (str(hero.data), hero.name,))
+    co.commit()

@@ -29,10 +29,10 @@
     </style>
     <title>{{title}}</title>
 </head>
-<body background="/static/img/forest_loc2.png">
+<body background="/static/img/pole_loc.jpg">
 <main role="main" class="container">
     <center>
-        <h1> Дремучие леса</h1>
+        <h1> Светлые поля </h1>
         <p>{{ event_text }}</p>
     </center>
         {% if fight == True %}
@@ -67,23 +67,23 @@ const App = {
       promote(value) {
         console.log(value);
         if (value == '1') {
-            history.pushState('', '', '/forest');
+            history.pushState('', '', '/fields');
             window.location.reload();
         } else if (value == '2') {
             history.pushState('', '', '/main_window');
             window.location.reload();
         } else if (value == '3') {
-            history.pushState('', '', '/atk');
+            history.pushState('', '', '/fatk');
             window.location.reload();
         } else if (value == '4') {
-            history.pushState('', '', '/defence');
+            history.pushState('', '', '/fdefence');
             window.location.reload();
         } else if (value == '6') {
-            history.pushState('', '', '/drink_hp');
+            history.pushState('', '', '/fdrink_hp');
             window.location.reload();
         } else if (value == '7') {
             console.log(value);
-            history.pushState('', '', '/run_away');
+            history.pushState('', '', '/main_window');
             window.location.reload();
         }
       },
