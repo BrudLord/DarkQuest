@@ -60,6 +60,7 @@ def registration():
             'exp': 0,
             'c_hp': 375,
             'm_hp': 0,
+            'cur_loc': None,
             'equip': [],
             'invent': [],
             'characteristics': {
@@ -216,6 +217,7 @@ def tranzit_armor(item):
                 WHERE name = ?''', (str(con.hero.data), con.hero.name,))
         co.commit()
         ca.commit()
+        print(resulte)
         return redirect('/map')
     else:
         return redirect('/no')
@@ -240,6 +242,7 @@ def tranzit_gear(item):
                     WHERE name = ?''', (str(con.hero.data), con.hero.name,))
         co.commit()
         ca.commit()
+        print(resulte)
         return redirect('/map')
     else:
         return redirect('/no')
@@ -334,18 +337,18 @@ def fight_parser(file, elements_to_put):
             if elem in elements_to_put:
                 event_form[event_form.index(elem)] = str(elements_to_put[elem])
         con.refresh_db()
-        return (''.join(event_form))
+        return ''.join(event_form)
 
 
 def fight_validator(data):
     if data['status'] == 'processing':
-        return (fight_parser('monster_base_fight.txt', data))
+        return fight_parser('monster_base_fight.txt', data)
     elif data['status'] == 'victory':
         con.hero.data['in_battle'] = False
-        return (fight_parser('monster_base_win.txt', data))
+        return fight_parser('monster_base_win.txt', data)
     elif data['status'] == 'lose':
         con.hero.data['in_battle'] = False
-        return (fight_parser('monster_base_lose.txt', data))
+        return fight_parser('monster_base_lose.txt', data)
 
 
 @con.app.route('/atkscr')
@@ -354,7 +357,7 @@ def atk_screen(data=None):
         return redirect('/log_in')
     if data is None:
         with open(os.path.abspath('static/events/monster_still_fight.txt'), 'r', encoding='UTF-8') as template:
-            return (template.read())
+            return template.read()
     else:
         return data
 
@@ -372,6 +375,7 @@ def location_forest_trip(atributes=None):
     else:
         title = 'Dark Fight'
         event_text = atk_screen(atributes)
+    con.hero.data['cur_loc'] = 'forest'
     con.refresh_db()
     return render_template('forest.html', event_text=event_text, title=title, fight=con.hero.data['in_battle'],
                            my_hp=con.hero.data['c_hp'], mon_hp=con.hero.data['m_hp'])
@@ -379,10 +383,13 @@ def location_forest_trip(atributes=None):
 
 @con.app.route('/drink_hp')
 def healpot():
-    if con.hero.data['invent'].count('хилка') > 0:
+    if con.hero.data['invent'].count('хилка') > 0 and con.hero.data['in_battle'] and\
+            con.hero.data['cur_loc'] == 'forest':
         con.hero.data['invent'].pop(con.hero.data['invent'].index('хилка'))
         con.hero.data['c_hp'] += 5 * con.hero.data['lvl']
         con.check_player_stats()
+    else:
+        run_away()
     con.refresh_db()
     return redirect('/forest')
 
@@ -420,6 +427,7 @@ def location_fields_trip(atributes=None):
     else:
         title = 'Dark Fight'
         event_text = atk_screen(atributes)
+    con.hero.data['cur_loc'] = 'fields'
     con.refresh_db()
     return render_template('field.html', event_text=event_text, title=title, fight=con.hero.data['in_battle'],
                            my_hp=con.hero.data['c_hp'], mon_hp=con.hero.data['m_hp'])
@@ -427,10 +435,13 @@ def location_fields_trip(atributes=None):
 
 @con.app.route('/fdrink_hp')
 def fhealpot():
-    if con.hero.data['invent'].count('хилка') > 0:
+    if con.hero.data['invent'].count('хилка') > 0 and con.hero.data['cur_loc'] == 'fields' and\
+            con.hero.data['in_battle']:
         con.hero.data['invent'].pop(con.hero.data['invent'].index('хилка'))
         con.hero.data['c_hp'] += 5 * con.hero.data['lvl']
         con.check_player_stats()
+    else:
+        run_away()
     con.refresh_db()
     return redirect('/fields')
 
@@ -468,6 +479,7 @@ def location_caves_trip(atributes=None):
     else:
         title = 'Dark Fight'
         event_text = atk_screen(atributes)
+    con.hero.data['cur_loc'] = 'caves'
     con.refresh_db()
     return render_template('caves.html', event_text=event_text, title=title, fight=con.hero.data['in_battle'],
                            my_hp=con.hero.data['c_hp'], mon_hp=con.hero.data['m_hp'])
@@ -475,10 +487,13 @@ def location_caves_trip(atributes=None):
 
 @con.app.route('/cdrink_hp')
 def chealpot():
-    if con.hero.data['invent'].count('хилка') > 0:
+    if con.hero.data['invent'].count('хилка') > 0 and con.hero.data['in_battle'] and \
+            con.hero.data['cur_loc'] == 'caves':
         con.hero.data['invent'].pop(con.hero.data['invent'].index('хилка'))
         con.hero.data['c_hp'] += 5 * con.hero.data['lvl']
         con.check_player_stats()
+    else:
+        run_away()
     con.refresh_db()
     return redirect('/caves')
 

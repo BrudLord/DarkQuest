@@ -83,6 +83,7 @@ class Location:
         self.events = events
         self.all_options = [self.monsters, self.events]
 
+
     def next_event(self):
         global player_opponent
         current_event = choice(choice(self.all_options))
@@ -91,9 +92,9 @@ class Location:
             player_opponent = current_event()
             global m_properties
             m_properties = player_opponent.info()
-            if con.hero.data['lvl'] <= 5 and con.hero.data['lvl'] < m_properties['lvl']:
-                con.hero.data['in_battle'] = False
-                return self.next_event()
+            while con.hero.data['lvl'] <= 5 and con.hero.data['lvl'] < m_properties['lvl']:
+                player_opponent = choice[self.monsters]
+                m_properties = player_opponent.info()
             con.hero.data['m_hp'] = m_properties['hp']
             with open(os.path.abspath('static/events/monster_preview.txt'), 'r', encoding='UTF-8') as file:
                 event_form = file.read().split('|')
