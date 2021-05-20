@@ -17,15 +17,9 @@
     <title>{{title}}</title>
 </head>
 <body background="/static/img/pole.jpg">
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
+{% for i in range(9)%}
+    <br>
+{% endfor %}
 <main role="main" class="container">
     {% block content %}{% endblock %}
 </main>
