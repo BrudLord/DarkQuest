@@ -147,7 +147,8 @@ def main_window():
     if con.hero.name is None:
         return redirect('/log_in')
     con.refresh_db()
-    return render_template('test.html')
+    fons = 'static/img/image3.gif'
+    return render_template('test.html', fon=fons)
 
 
 @con.app.route('/help')
