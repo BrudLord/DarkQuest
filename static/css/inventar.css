@@ -3,9 +3,10 @@ h1 {
 }
 .table_1 {
   position: absolute;
-  display: flex;
-  margin-top: 24%;
-  margin-left: 7%;
+  float: left;
+  font-size: 20px;
+  top: 65%;
+  left: 25%;
   background: rgba(0, 0, 0, 0);
   border-collapse: collapse;
   text-align: left;
@@ -13,9 +14,10 @@ h1 {
 }
 .table_2 {
   position: absolute;
-  display: flex;
-  margin-top: 6%;
-  margin-left: 33%;
+  float: left;
+  font-size: 20px;
+  top: 15%;
+  left: 55%;
   background: rgba(0, 0, 0, 0);
   border-collapse: collapse;
   text-align: left;
@@ -23,9 +25,10 @@ h1 {
 }
 .table_3 {
   position: absolute;
-  display: flex;
-  margin-top: 30%;
-  margin-left: 38%;
+  float: left;
+  font-size: 20px;
+  top: 55%;
+  left: 57.5%;
   background: rgba(0, 0, 0, 0);
   border-collapse: collapse;
   text-align: left;
@@ -79,24 +82,29 @@ h1 {
 }
 .btn {
   position: absolute;
-  display: flex;
-  margin-top: 45%;
-  margin-left: 50%;
+  float: left;
+  font-size: 20px;
+  top: 90%;
+  left: 85%;
 }
 .imag {
   position: absolute;
-  display: flex;
-  margin-top: 6%;
-  margin-left: 9%;
+  float: left;
+  font-size: 20px;
+  color: #65000b;
+  top: 20%;
+  left: 28%
 }
 .scrolling2 {
     width: 450px;
     height: 286px;
     overflow: scroll;
 }
-.lvl {
+.lvl{
   position: absolute;
+  float: left;
+  font-size: 20px;
   color: #65000b;
-  margin-top: 6%;
-  margin-left: 13.5%;
+  top: 15%;
+  left: 30%;
 }

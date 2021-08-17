@@ -5,25 +5,25 @@
   <title>DarkQuest</title>
   <style type="text/css">
    #town {
-    position: relative; /* Относительное позиционирование */
-    float: left; /* Совмещение колонок по горизонтали */
+    position: absolute; /* Относительное позиционирование */
     width: 100px; /* Ширина слоя */
-    left: 1250px; /* Сдвиг слоя влево */
-    top: 500px; /* Смещение слоя вниз */
+    float: left;
+    left: 34%; /* Сдвиг слоя влево */
+    top: 46%; /* Смещение слоя вниз */
     background-color: Transparent;
     background-repeat:no-repeat;
     border: none;
-    cursor:pointer;
+    cursor: pointer;
     overflow: hidden;
-    outline:none;
+    outline: none;
 
    }
    #cave {
-    position: relative; /* Относительное позиционирование */
-    float: left; /* Совмещение колонок по горизонтали */
+    position: absolute; /* Относительное позиционирование */
     width: 100px; /* Ширина слоя */
-    left: 300px; /* Сдвиг слоя влево */
-    top: 600px; /* Смещение слоя вниз */
+    float: left;
+    left: 28.5%; /* Сдвиг слоя влево */
+    top: 22%; /* Смещение слоя вниз */
     background-color: Transparent;
     background-repeat:no-repeat;
     border: none;
@@ -33,11 +33,11 @@
 
    }
    #forest {
-    position: relative; /* Относительное позиционирование */
-    float: left; /* Совмещение колонок по горизонтали */
+    position: absolute; /* Относительное позиционирование */
     width: 100px; /* Ширина слоя */
-    left: 550px; /* Сдвиг слоя влево */
-    top: 225px; /* Смещение слоя вниз */
+    float: left;
+    left: 18%; /* Сдвиг слоя влево */
+    top: 53%; /* Смещение слоя вниз */
     background-color: Transparent;
     background-repeat:no-repeat;
     border: none;
@@ -48,11 +48,11 @@
 
    }
    #hills {
-    position: relative; /* Относительное позиционирование */
-    float: left; /* Совмещение колонок по горизонтали */
+    position: absolute; /* Относительное позиционирование */
     width: 100px; /* Ширина слоя */
-    left: 675px; /* Сдвиг слоя влево */
-    top: 550px; /* Смещение слоя вниз */
+    float: left;
+    left: 67%; /* Сдвиг слоя влево */
+    top: 31%; /* Смещение слоя вниз */
     background-color: Transparent;
     background-repeat:no-repeat;
     border: none;
@@ -62,6 +62,11 @@
 
    }
   </style>
+    <style>
+        body {background-size: 100% 100%;
+               background-repeat: no-repeat;
+               background-attachment: fixed;}
+    </style>
 </head>
 <body background="/static/img/map.png">
 <div id="town">

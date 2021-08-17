@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+        body {background-size: 100% 100%;
+               background-repeat: no-repeat;
+               background-attachment: fixed;}
+    </style>
     <style>body {background-color: #6D4A5E; background-size: cover;}</style>
     <link type="text/css"
           rel="stylesheet"
@@ -8,11 +13,41 @@
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
           crossorigin="anonymous">
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title> Dark Quest </title>
+    <style>
+    .weapon2 {
+        position: absolute;
+        float: left;
+        left: 3%;
+        top: 5%;
+        width: 17%;
+        height: 5%;
+        background-color: #daa46f; /* Цвет фона */
+        color: #65000b;
+    }
+    .col {
+        position: absolute;
+        float: left;
+        left: 3%;
+        top: 15%;
+        width: 17%;
+        height: 5%;
+        background-color: #daa46f; /* Цвет фона */
+        color: #65000b;
+    }
+    .bbb {
+        position: absolute;
+        float: left;
+        left: 21%;
+        top: 5%;
+        width: 9%;
+        height: 15%;
+    }
+    </style>
 </head>
 <body background='static/img/Morshu.png' width="100%" height="100%">
 <form action="/show_cost_gear" method="POST">
-<input list="weapon" name="test2">
+<input list="weapon" name="test2" class="weapon2">
 <datalist id="weapon">
     <option>end of entity</option>
     <option>Gordon's tire iron</option>
@@ -27,8 +62,8 @@
     <option>fire sword</option>
     <option>devil axe</option>
 </datalist>
-<input type="submit" value="Go">
+<input type="submit" value="Принесиите-ка мне эту вещицу" class="col">
 </form>
-<div><form action="/map"><button class="btn btn-lg btn-danger">назад</button></form></div>
+<div><form action="/map"><button class="btn btn-lg btn-danger bbb">Назад</button></form></div>
 </body>
 </html>

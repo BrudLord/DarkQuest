@@ -13,6 +13,7 @@ con.app = Flask(__name__)
 con.app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(con.app)
+item = ''
 
 
 @login_manager.user_loader
@@ -200,7 +201,7 @@ def tranzit(item):
         return redirect('/map')
 
 
-def tranzit_armor(item):
+def tranzit_armor():
     if con.hero.name is None:
         return redirect('/log_in')
     co = sqlite3.connect('db/items.sqlite')
@@ -225,7 +226,7 @@ def tranzit_armor(item):
         return redirect('/no')
 
 
-def tranzit_gear(item):
+def tranzit_gear():
     if con.hero.name is None:
         return redirect('/log_in')
     co = sqlite3.connect('db/items.sqlite')
@@ -262,9 +263,8 @@ def choice():
 def buy_armor():
     if con.hero.name is None:
         return redirect('/log_in')
-    item = request.form['test']
     con.refresh_db()
-    return tranzit_armor(item)
+    return tranzit_armor()
 
 
 @con.app.route('/weapon', methods=['GET', 'POST'])
@@ -279,9 +279,8 @@ def choice1():
 def buy_gear():
     if con.hero.name is None:
         return redirect('/log_in')
-    item = request.form['test2']
     con.refresh_db()
-    return tranzit_gear(item)
+    return tranzit_gear()
 
 
 @con.app.route('/show_cost_armor', methods=['GET', 'POST'])
@@ -289,14 +288,17 @@ def show_cost_armor():
     if con.hero.name is None:
         return redirect('/log_in')
     import sqlite3
-    item = request.form['test']
+    itm = request.form['test']
     co = sqlite3.connect('db/items.sqlite')
     cur = co.cursor()
-    result = cur.execute('''SELECT * FROM Armor WHERE name = ?''', (item,)).fetchone()
-    print(result)
+    result = cur.execute('''SELECT * FROM Armor WHERE name = ?''', (itm,)).fetchone()
     '''сюда надо запихнуть покозатель денег игрока ---->'''
     con.refresh_db()
-    return render_template('success.html', item=item, full=result)
+    if result is None:
+        return render_template('choice.html')
+    global item
+    item = itm
+    return render_template('success.html', item=item, lvl=result[2], gold=result[3], par='Защита +' + result[4].split()[0])
 
 
 @con.app.route('/show_cost_gear', methods=['GET', 'POST'])
@@ -304,14 +306,17 @@ def show_cost_gear():
     if con.hero.name is None:
         return redirect('/log_in')
     import sqlite3
-    item = request.form['test2']
+    itm = request.form['test2']
     co = sqlite3.connect('db/items.sqlite')
     cur = co.cursor()
-    result = cur.execute('''SELECT * FROM Weapons WHERE name = ?''', (item,)).fetchone()
-    print(result)
+    result = cur.execute('''SELECT * FROM Weapons WHERE name = ?''', (itm,)).fetchone()
     '''сюда надо запихнуть покозатель денег игрока ---->'''
     con.refresh_db()
-    return render_template('success2.html', item=item, full=result)
+    if result is None:
+        return render_template('choice2.html')
+    global item
+    item = itm
+    return render_template('success2.html', item=item, lvl=result[2], gold=result[3], par='Атака +' + result[4].split()[0])
 
 
 def init_hero(name):

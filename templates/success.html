@@ -10,15 +10,43 @@
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
           crossorigin="anonymous">
     <meta charset="UTF-8">
+    <style>
+    .bbb {
+        position: absolute;
+        float: left;
+        left: 3%;
+        top: 5%;
+        width: 13%;
+        height: 3%;
+        background-color: #daa46f; /* Цвет фона */
+        color: #65000b;
+    }
+    .bbb2 {
+        position: absolute;
+        float: left;
+        left: 17%;
+        top: 5%;
+        width: 13%;
+        height: 3%;
+    }
+    .txt {
+        position: absolute;
+        float: left;
+        left: 3%;
+        top: 10%;
+    }
+    </style>
 </head>
 <body background='static/img/Morshu.png' width="100%" height="100%">
-<h3><font color="#25221B">Придмет: {{item}}</font></h3>
-<div><font color="#25221B">Полное описание:id, name, lvl, rare, cost, DMG</font></div>
-<div><font color="#25221B">{{full}}</font></div>
+<div class="txt">
+    <h3><font color="#65000b">Предмет: {{item}}</font></h3>
+    <h4><font color="#65000b">Уровень: {{lvl}}</font></h4>
+    <h4><font color="#65000b">Цена: {{gold}}</font></h4>
+    <h4><font color="#65000b">Параметры: {{par}}</font></h4>
+</div>
 <form action="/buy_armor" method="POST">
-<input name="test" value="{{item}}" readonly>
-<input type="submit" value="Купить">
+<input type="submit" value="Купить" class="bbb">
 </form>
-<div><form action="/armor"><button class="btn btn-lg btn-danger">назад</button></form></div>
+<div><form action="/armor"><button class="btn btn-lg btn-danger bbb2">Назад</button></form></div>
 </body>
 </html>
