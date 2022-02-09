@@ -6,7 +6,7 @@ h1 {
   float: left;
   font-size: 20px;
   top: 65%;
-  left: 25%;
+  left: 19%;
   background: rgba(0, 0, 0, 0);
   border-collapse: collapse;
   text-align: left;
@@ -17,7 +17,7 @@ h1 {
   float: left;
   font-size: 20px;
   top: 15%;
-  left: 55%;
+  left: 47%;
   background: rgba(0, 0, 0, 0);
   border-collapse: collapse;
   text-align: left;
@@ -27,8 +27,8 @@ h1 {
   position: absolute;
   float: left;
   font-size: 20px;
-  top: 55%;
-  left: 57.5%;
+  top: 65%;
+  left: 47.5%;
   background: rgba(0, 0, 0, 0);
   border-collapse: collapse;
   text-align: left;
@@ -93,7 +93,7 @@ h1 {
   font-size: 20px;
   color: #65000b;
   top: 20%;
-  left: 28%
+  left: 22%
 }
 .scrolling2 {
     width: 450px;
@@ -106,5 +106,5 @@ h1 {
   font-size: 20px;
   color: #65000b;
   top: 15%;
-  left: 30%;
+  left: 25%;
 }
