@@ -8,8 +8,8 @@ hero = player.Hero()
 
 
 def check_player_stats():
-    if hero.data['exp'] >= 10 * 2 ** (hero.data['lvl'] + 2):
-        hero.data['exp'] -= 10 * 2 ** (hero.data['lvl'] + 2)
+    if hero.data['exp'] >= 10 * 2 ** (hero.data['lvl']):
+        hero.data['exp'] -= 10 * 2 ** (hero.data['lvl'])
         hero.data['lvl'] += 1
         hero.data['characteristics']['Damage'] += 1
         hero.data['characteristics']['Armor'] += 1

@@ -11,19 +11,23 @@
           href="/static/css/inventar.css">
 <img src="static/img/hero.png" class="imag">
 <div class="lvl">Уровень: {{level}}</div>
-<table class="table_blur table_2 scrolling2">
-  <tr>
+<table class="table_blur table_2">
+  <thead>
+    <tr>
     {% for i in tables['table_2']['header'] %}
       <th>{{ i }}</th>
     {% endfor %}
     </tr>
-  {% for i in tables['table_2']['equip'] %}
-  <tr>
-    {% for j in i %}
-      <td>{{ j }}</td>
+  </thead>
+  <tbody>
+    {% for i in tables['table_2']['equip'] %}
+    <tr class="tbody">
+      {% for j in i %}
+        <td>{{ j }}</td>
+      {% endfor %}
+    </tr>
     {% endfor %}
-  </tr>
-  {% endfor %}
+  </tbody>
 </table>
 <table class="table_blur table_3">
   <tr>

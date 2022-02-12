@@ -7,9 +7,11 @@ from forms.user import RegisterForm, LoginForm
 from work_with_db.Users import User
 from flask_login import LoginManager, login_user
 from locations import location_forest, location_caves, location_fields, attack
+from flask_ngrok import run_with_ngrok
 
 
 con.app = Flask(__name__)
+run_with_ngrok(con.app)
 con.app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(con.app)
@@ -546,4 +548,4 @@ def run_away():
 
 if __name__ == '__main__':
     db_session.global_init("db/base.sqlite")
-    con.app.run(port=8080, debug=True)
+    con.app.run()
